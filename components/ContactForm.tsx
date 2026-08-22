@@ -10,8 +10,17 @@ function encode(data: Record<string, string>) {
     .join("&");
 }
 
-export function ContactForm() {
+type ContactFormProps = {
+  onStatusChange?: (status: Status) => void;
+};
+
+export function ContactForm({ onStatusChange }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
+
+  function updateStatus(next: Status) {
+    setStatus(next);
+    onStatusChange?.(next);
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -20,11 +29,11 @@ export function ContactForm() {
 
     if (formData.get("company")) {
       // Honeypot field caught a bot; report success without submitting.
-      setStatus("success");
+      updateStatus("success");
       return;
     }
 
-    setStatus("submitting");
+    updateStatus("submitting");
 
     const payload: Record<string, string> = { "form-name": "contact" };
     formData.forEach((value, key) => {
@@ -39,20 +48,15 @@ export function ContactForm() {
       });
 
       if (!response.ok) throw new Error("Submission failed");
-      setStatus("success");
+      updateStatus("success");
       form.reset();
     } catch {
-      setStatus("error");
+      updateStatus("error");
     }
   }
 
   if (status === "success") {
-    return (
-      <p className="max-w-[62ch] text-body">
-        Thanks &mdash; we&rsquo;ve got it and will get back to you within
-        one business day.
-      </p>
-    );
+    return null;
   }
 
   return (
