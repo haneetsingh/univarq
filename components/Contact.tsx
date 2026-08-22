@@ -1,3 +1,5 @@
+import { ContactForm } from "./ContactForm";
+
 export function Contact() {
   return (
     <section
@@ -13,16 +15,17 @@ export function Contact() {
           Tell us what you're trying to build.
         </h2>
         <p className="max-w-[62ch] text-body">
-          Reach out with a brief description of the problem, whether
-          it&rsquo;s a new build, an embedded team or a system that needs
-          modernizing. We respond within one business day.
+          Send us a brief description of the problem, whether it&rsquo;s a
+          new build, an embedded team or a system that needs modernizing.
+          We respond within one business day.
         </p>
-        <a
-          href="mailto:info@univarq.io"
-          className="border border-brass bg-brass px-6 py-3 text-sm font-medium text-ink transition-colors hover:bg-brass-hover hover:border-brass-hover"
-        >
-          info@univarq.io
-        </a>
+        <ContactForm />
+        <p className="text-sm text-grey">
+          Or email us directly at{" "}
+          <a href="mailto:info@univarq.io" className="text-brass">
+            info@univarq.io
+          </a>
+        </p>
       </div>
     </section>
   );
