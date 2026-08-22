@@ -11,9 +11,6 @@ export function Footer() {
           </span>
         </div>
         <p className="label text-grey">
-          Univarq Technologies &mdash; a trade name of 15098742 Canada Inc.
-        </p>
-        <p className="label text-grey">
           &copy; {new Date().getFullYear()} Univarq Technologies
         </p>
       </div>
