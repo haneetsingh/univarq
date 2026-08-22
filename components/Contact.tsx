@@ -18,10 +18,10 @@ export function Contact() {
           modernizing. We respond within one business day.
         </p>
         <a
-          href="mailto:hello@univarq.io"
+          href="mailto:info@univarq.io"
           className="border border-brass bg-brass px-6 py-3 text-sm font-medium text-ink transition-colors hover:bg-brass-hover hover:border-brass-hover"
         >
-          hello@univarq.io
+          info@univarq.io
         </a>
       </div>
     </section>
