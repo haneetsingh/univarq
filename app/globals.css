@@ -13,6 +13,17 @@
   --color-rule-strong: #2a3441;
   --color-rule-light: #e0dbd0;
 
+  --color-success: #4f9e7a;
+  --color-success-bg: rgba(79, 158, 122, 0.1);
+  --color-success-border: rgba(79, 158, 122, 0.35);
+  --color-error: #c4544a;
+  --color-error-bg: rgba(196, 84, 74, 0.1);
+  --color-error-border: rgba(196, 84, 74, 0.35);
+  --color-error-field-bg: rgba(196, 84, 74, 0.06);
+  --color-focus: #2f5686;
+  --color-input-border: #2a3441;
+  --color-placeholder: #4d5966;
+
   --background: var(--color-ink);
   --foreground: var(--color-paper);
 
@@ -33,6 +44,16 @@
   --color-rule: var(--color-rule);
   --color-rule-strong: var(--color-rule-strong);
   --color-rule-light: var(--color-rule-light);
+  --color-success: var(--color-success);
+  --color-success-bg: var(--color-success-bg);
+  --color-success-border: var(--color-success-border);
+  --color-error: var(--color-error);
+  --color-error-bg: var(--color-error-bg);
+  --color-error-border: var(--color-error-border);
+  --color-error-field-bg: var(--color-error-field-bg);
+  --color-focus: var(--color-focus);
+  --color-input-border: var(--color-input-border);
+  --color-placeholder: var(--color-placeholder);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-display: var(--font-display);
@@ -89,6 +110,6 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-brass);
+  outline: 2px solid var(--color-focus);
   outline-offset: 3px;
 }
