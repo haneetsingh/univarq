@@ -3,16 +3,13 @@ import type { Handler } from "@netlify/functions";
 const RESEND_API_URL = "https://api.resend.com/emails";
 const FROM_ADDRESS = "Univarq <info@univarq.io>";
 
-type NetlifyFormPayload = {
-  form_name?: string;
-  data?: {
-    name?: string;
-    email?: string;
-    companyName?: string;
-    message?: string;
-    reference?: string;
-    honeypot?: string;
-  };
+type ContactSubmission = {
+  name?: string;
+  email?: string;
+  companyName?: string;
+  message?: string;
+  reference?: string;
+  honeypot?: string;
 };
 
 function escapeHtml(value: string) {
@@ -40,28 +37,20 @@ async function sendEmail(apiKey: string, body: Record<string, unknown>) {
 }
 
 export const handler: Handler = async (event) => {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.warn("RESEND_API_KEY is not set; skipping confirmation email.");
-    return { statusCode: 200, body: "skipped" };
+  if (event.httpMethod !== "POST") {
+    return { statusCode: 405, body: "Method not allowed" };
   }
 
-  let payload: { payload?: NetlifyFormPayload };
+  let data: ContactSubmission;
   try {
-    payload = JSON.parse(event.body ?? "{}");
+    data = JSON.parse(event.body ?? "{}");
   } catch {
-    return { statusCode: 400, body: "invalid payload" };
+    return { statusCode: 400, body: JSON.stringify({ error: "Invalid payload" }) };
   }
 
-  const form = payload.payload;
-  if (!form || form.form_name !== "contact") {
-    return { statusCode: 200, body: "ignored" };
-  }
-
-  const data = form.data ?? {};
   if (data.honeypot) {
-    // Spam caught by the honeypot; don't send anything.
-    return { statusCode: 200, body: "spam" };
+    // Spam caught by the honeypot; report success without sending anything.
+    return { statusCode: 200, body: JSON.stringify({ ok: true }) };
   }
 
   const name = (data.name ?? "").trim();
@@ -71,7 +60,16 @@ export const handler: Handler = async (event) => {
   const reference = (data.reference ?? "").trim();
 
   if (!name || !email || !message) {
-    return { statusCode: 200, body: "missing fields" };
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "Missing required fields" }),
+    };
+  }
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error("RESEND_API_KEY is not set; cannot send contact form emails.");
+    return { statusCode: 500, body: JSON.stringify({ error: "Email not configured" }) };
   }
 
   const firstName = name.split(" ")[0];
@@ -117,8 +115,8 @@ export const handler: Handler = async (event) => {
     ]);
   } catch (error) {
     console.error("Failed to send contact form emails", error);
-    // Submission is already recorded in Netlify's Forms dashboard either way.
+    return { statusCode: 502, body: JSON.stringify({ error: "Failed to send" }) };
   }
 
-  return { statusCode: 200, body: "ok" };
+  return { statusCode: 200, body: JSON.stringify({ ok: true }) };
 };

@@ -4,12 +4,6 @@ export type Status = "idle" | "submitting" | "success" | "error";
 
 export const MESSAGE_MAX = 1200;
 
-export function encode(data: Record<string, string>) {
-  return Object.keys(data)
-    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-    .join("&");
-}
-
 export function validateField(name: FieldName, value: string): string | undefined {
   const trimmed = value.trim();
   if (name === "name" && !trimmed) return "Enter your name.";

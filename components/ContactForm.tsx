@@ -6,7 +6,6 @@ import { MessageField } from "./contact-form/MessageField";
 import { ErrorBanner } from "./contact-form/ErrorBanner";
 import { SubmitButton } from "./contact-form/SubmitButton";
 import {
-  encode,
   referenceId,
   validateField,
   type FieldErrors,
@@ -81,16 +80,13 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
     setStatus("submitting");
     setNetworkError(false);
 
-    const payload: Record<string, string> = { "form-name": "contact", reference };
-    formData.forEach((value, key) => {
-      payload[key] = String(value);
-    });
+    const companyName = String(formData.get("companyName") ?? "");
 
     try {
-      const response = await fetch("/", {
+      const response = await fetch("/.netlify/functions/submission-created", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode(payload),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, companyName, message, reference }),
       });
 
       if (!response.ok) throw new Error("Submission failed");
@@ -109,12 +105,10 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
 
   return (
     <form
-      name="contact"
       onSubmit={handleSubmit}
       noValidate
       className="flex w-full max-w-xl flex-col gap-6"
     >
-      <input type="hidden" name="form-name" value="contact" />
       <p className="hidden">
         <label>
           Leave this blank
