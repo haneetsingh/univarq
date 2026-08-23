@@ -14,7 +14,11 @@ export function Services() {
       className="border-t border-rule px-6 py-22 sm:px-8"
     >
       <div className="mx-auto max-w-6xl">
-        <p className="label mb-4 text-brass">02 — What We Do</p>
+        <p className="label mb-4">
+          <a href="#services" className="text-brass no-underline hover:underline">
+            03 — What We Do
+          </a>
+        </p>
         <h2
           className="max-w-2xl font-display font-semibold text-paper"
           style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)" }}
