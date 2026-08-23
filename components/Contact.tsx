@@ -47,9 +47,8 @@ export function Contact() {
             </div>
             <p className="max-w-[44ch] text-body" style={{ textWrap: "pretty" }}>
               A copy is on its way to{" "}
-              <span className="text-paper">{success.email}</span>. You&rsquo;ll
-              hear from the engineer who&rsquo;d actually take this on, within
-              one business day.
+              <span className="text-paper">{success.email}</span>. Someone
+              on the team will look it over and get in touch.
             </p>
             <div className="flex w-full flex-col gap-3 border-t border-rule pt-6">
               <span className="label text-grey">Reference</span>
