@@ -1,14 +1,11 @@
 type MarkProps = {
   size?: number;
   className?: string;
+  keystoneColor?: "brass" | "success";
 };
 
-/**
- * The Univarq bracket mark, drawn from the exact 64x64 SVG paths in the
- * brand handoff (design_handoff_univarq_brand/README.md). Paper brackets,
- * brass keystone — for use on dark grounds.
- */
-export function Mark({ size = 32, className }: MarkProps) {
+// Keystone turns success green only in the contact form's confirmation state.
+export function Mark({ size = 32, className, keystoneColor = "brass" }: MarkProps) {
   return (
     <svg
       width={size}
@@ -28,7 +25,13 @@ export function Mark({ size = 32, className }: MarkProps) {
         stroke="var(--color-paper)"
         strokeWidth={6}
       />
-      <rect x={26} y={26} width={12} height={12} fill="var(--color-brass)" />
+      <rect
+        x={26}
+        y={26}
+        width={12}
+        height={12}
+        fill={keystoneColor === "success" ? "var(--color-success)" : "var(--color-brass)"}
+      />
     </svg>
   );
 }
