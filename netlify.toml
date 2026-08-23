@@ -1,5 +1,7 @@
 [build]
   command = "next build"
+  # RESEND_API_KEY only lands in the unpublished Turbopack cache, not shipped output.
+  environment = { SECRETS_SCAN_OMIT_KEYS = "RESEND_API_KEY" }
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
