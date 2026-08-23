@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type FocusEvent, type FormEvent } from "react";
+import { useState, type FocusEvent, type FormEvent } from "react";
 import { Field } from "./contact-form/Field";
 import { MessageField } from "./contact-form/MessageField";
 import { ErrorBanner } from "./contact-form/ErrorBanner";
@@ -24,10 +24,6 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [messageLength, setMessageLength] = useState(0);
   const [networkError, setNetworkError] = useState(false);
-  const loadedAt = useRef<number | null>(null);
-  useEffect(() => {
-    loadedAt.current = Date.now();
-  }, []);
 
   function handleBlur(event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = event.currentTarget;
@@ -48,11 +44,8 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
     const formData = new FormData(form);
     const reference = referenceId();
 
-    // Honeypot + timing check: real users take more than 2s to fill this in.
-    if (
-      formData.get("honeypot") ||
-      (loadedAt.current !== null && Date.now() - loadedAt.current < 2000)
-    ) {
+    // Honeypot: hidden field a real user never fills in.
+    if (formData.get("honeypot")) {
       onSuccess?.({
         name: String(formData.get("name") ?? ""),
         email: String(formData.get("email") ?? ""),
