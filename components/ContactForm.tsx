@@ -1,134 +1,181 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-
-type Status = "idle" | "submitting" | "success" | "error";
-
-function encode(data: Record<string, string>) {
-  return Object.keys(data)
-    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-    .join("&");
-}
+import { useState, type FocusEvent, type FormEvent } from "react";
+import { Field } from "./contact-form/Field";
+import { MessageField } from "./contact-form/MessageField";
+import { ErrorBanner } from "./contact-form/ErrorBanner";
+import { SubmitButton } from "./contact-form/SubmitButton";
+import {
+  referenceId,
+  validateField,
+  type FieldErrors,
+  type FieldName,
+  type Status,
+  type SuccessInfo,
+} from "./contact-form/utils";
 
 type ContactFormProps = {
-  onStatusChange?: (status: Status) => void;
+  onSuccess?: (info: SuccessInfo) => void;
 };
 
-export function ContactForm({ onStatusChange }: ContactFormProps) {
+export function ContactForm({ onSuccess }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [messageLength, setMessageLength] = useState(0);
+  const [networkError, setNetworkError] = useState(false);
 
-  function updateStatus(next: Status) {
-    setStatus(next);
-    onStatusChange?.(next);
+  function handleBlur(event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    const { name, value } = event.currentTarget;
+    if (name !== "name" && name !== "email" && name !== "message") return;
+    const message = validateField(name, value);
+    setErrors((prev) => ({ ...prev, [name]: message }));
+  }
+
+  function handleChange(name: FieldName) {
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
+    const reference = referenceId();
 
-    if (formData.get("company")) {
-      // Honeypot field caught a bot; report success without submitting.
-      updateStatus("success");
+    // Honeypot: hidden field a real user never fills in.
+    if (formData.get("honeypot")) {
+      onSuccess?.({
+        name: String(formData.get("name") ?? ""),
+        email: String(formData.get("email") ?? ""),
+        reference,
+      });
+      setStatus("success");
       return;
     }
 
-    updateStatus("submitting");
+    const name = String(formData.get("name") ?? "");
+    const email = String(formData.get("email") ?? "");
+    const message = String(formData.get("message") ?? "");
 
-    const payload: Record<string, string> = { "form-name": "contact" };
-    formData.forEach((value, key) => {
-      payload[key] = String(value);
-    });
+    const nextErrors: FieldErrors = {
+      name: validateField("name", name),
+      email: validateField("email", email),
+      message: validateField("message", message),
+    };
+    setErrors(nextErrors);
+
+    const firstInvalid = (["name", "email", "message"] as FieldName[]).find(
+      (field) => nextErrors[field]
+    );
+    if (firstInvalid) {
+      setStatus("error");
+      setNetworkError(false);
+      form.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+        `[name="${firstInvalid}"]`
+      )?.focus();
+      return;
+    }
+
+    setStatus("submitting");
+    setNetworkError(false);
+
+    const companyName = String(formData.get("companyName") ?? "");
 
     try {
-      const response = await fetch("/", {
+      const response = await fetch("/.netlify/functions/submission-created", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode(payload),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, companyName, message, reference }),
       });
 
       if (!response.ok) throw new Error("Submission failed");
-      updateStatus("success");
+
+      onSuccess?.({ name, email, reference });
+      setStatus("success");
       form.reset();
+      setMessageLength(0);
     } catch {
-      updateStatus("error");
+      setStatus("error");
+      setNetworkError(true);
     }
   }
 
-  if (status === "success") {
-    return null;
-  }
+  const submitting = status === "submitting";
 
   return (
     <form
-      name="contact"
       onSubmit={handleSubmit}
-      className="flex w-full max-w-xl flex-col gap-5"
+      noValidate
+      className="flex w-full max-w-xl flex-col gap-6"
     >
-      <input type="hidden" name="form-name" value="contact" />
       <p className="hidden">
         <label>
-          Company
-          <input name="company" tabIndex={-1} autoComplete="off" />
+          Leave this blank
+          <input name="honeypot" tabIndex={-1} autoComplete="off" />
         </label>
       </p>
 
-      <div className="flex flex-col gap-2">
-        <label htmlFor="name" className="label text-grey">
-          Name
-        </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          required
-          className="border border-rule-strong bg-transparent px-4 py-3 text-paper outline-none transition-colors focus:border-brass"
-        />
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label htmlFor="email" className="label text-grey">
-          Email
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          className="border border-rule-strong bg-transparent px-4 py-3 text-paper outline-none transition-colors focus:border-brass"
-        />
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label htmlFor="message" className="label text-grey">
-          What are you trying to build?
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          rows={5}
-          required
-          className="border border-rule-strong bg-transparent px-4 py-3 text-paper outline-none transition-colors focus:border-brass"
-        />
-      </div>
-
-      <button
-        type="submit"
-        disabled={status === "submitting"}
-        className="w-fit border border-brass bg-brass px-6 py-3 text-sm font-medium text-ink transition-colors hover:bg-brass-hover hover:border-brass-hover disabled:opacity-60"
-      >
-        {status === "submitting" ? "Sending…" : "Send"}
-      </button>
-
       {status === "error" && (
-        <p className="text-sm text-body">
-          Something went wrong. Email us directly at{" "}
-          <a href="mailto:info@univarq.io" className="text-brass">
-            info@univarq.io
-          </a>
-          .
-        </p>
+        <ErrorBanner
+          networkError={networkError}
+          invalidCount={Object.values(errors).filter(Boolean).length}
+        />
       )}
+
+      <Field
+        id="name"
+        name="name"
+        label="Name"
+        required
+        disabled={submitting}
+        error={errors.name}
+        onBlur={handleBlur}
+        onChange={() => handleChange("name")}
+        placeholder="John Doe"
+      />
+
+      <Field
+        id="email"
+        name="email"
+        label="Work email"
+        type="email"
+        required
+        disabled={submitting}
+        error={errors.email}
+        onBlur={handleBlur}
+        onChange={() => handleChange("email")}
+        placeholder="you@company.com"
+      />
+
+      <Field
+        id="companyName"
+        name="companyName"
+        label="Company"
+        labelSuffix={
+          <span
+            className="normal-case tracking-normal text-[12.5px]"
+            style={{ fontFamily: "var(--font-body)", color: "var(--color-placeholder)" }}
+          >
+            optional
+          </span>
+        }
+        disabled={submitting}
+        placeholder="Where you work"
+      />
+
+      <MessageField
+        disabled={submitting}
+        error={errors.message}
+        messageLength={messageLength}
+        onBlur={handleBlur}
+        onMessageChange={(e) => {
+          setMessageLength(e.currentTarget.value.length);
+          handleChange("message");
+        }}
+      />
+
+      <SubmitButton submitting={submitting} />
     </form>
   );
 }

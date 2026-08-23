@@ -17,7 +17,7 @@ export function Hero() {
         AI. We understand what you&rsquo;re trying to do, take it on as our
         own and we deliver it.
       </p>
-      <div className="flex flex-wrap gap-4 pt-2">
+      <div className="flex flex-wrap items-center gap-8 pt-2">
         <a
           href="#contact"
           className="border border-brass bg-brass px-6 py-3 text-sm font-medium text-ink transition-colors hover:bg-brass-hover hover:border-brass-hover"
@@ -26,9 +26,15 @@ export function Hero() {
         </a>
         <a
           href="#services"
-          className="border border-rule-strong px-6 py-3 text-sm font-medium text-paper transition-colors hover:border-brass hover:text-brass"
+          className="group flex items-center gap-2 text-sm font-medium text-body transition-colors hover:text-paper"
         >
           See what we do
+          <span
+            aria-hidden="true"
+            className="text-brass transition-transform group-hover:translate-x-1"
+          >
+            &rarr;
+          </span>
         </a>
       </div>
     </section>
