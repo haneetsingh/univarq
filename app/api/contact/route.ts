@@ -1,4 +1,4 @@
-import type { Handler } from "@netlify/functions";
+import { NextResponse } from "next/server";
 
 const RESEND_API_URL = "https://api.resend.com/emails";
 const FROM_ADDRESS = "Univarq <info@univarq.io>";
@@ -36,21 +36,17 @@ async function sendEmail(apiKey: string, body: Record<string, unknown>) {
   }
 }
 
-export const handler: Handler = async (event) => {
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method not allowed" };
-  }
-
+export async function POST(request: Request) {
   let data: ContactSubmission;
   try {
-    data = JSON.parse(event.body ?? "{}");
+    data = await request.json();
   } catch {
-    return { statusCode: 400, body: JSON.stringify({ error: "Invalid payload" }) };
+    return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
 
   if (data.honeypot) {
     // Spam caught by the honeypot; report success without sending anything.
-    return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+    return NextResponse.json({ ok: true });
   }
 
   const name = (data.name ?? "").trim();
@@ -60,16 +56,13 @@ export const handler: Handler = async (event) => {
   const reference = (data.reference ?? "").trim();
 
   if (!name || !email || !message) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Missing required fields" }),
-    };
+    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error("RESEND_API_KEY is not set; cannot send contact form emails.");
-    return { statusCode: 500, body: JSON.stringify({ error: "Email not configured" }) };
+    return NextResponse.json({ error: "Email not configured" }, { status: 500 });
   }
 
   const firstName = name.split(" ")[0];
@@ -115,8 +108,8 @@ export const handler: Handler = async (event) => {
     ]);
   } catch (error) {
     console.error("Failed to send contact form emails", error);
-    return { statusCode: 502, body: JSON.stringify({ error: "Failed to send" }) };
+    return NextResponse.json({ error: "Failed to send" }, { status: 502 });
   }
 
-  return { statusCode: 200, body: JSON.stringify({ ok: true }) };
-};
+  return NextResponse.json({ ok: true });
+}
