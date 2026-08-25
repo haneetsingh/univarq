@@ -5,6 +5,7 @@ import { About } from "@/components/About";
 import { WhyUnivarq } from "@/components/WhyUnivarq";
 import { Services } from "@/components/Services";
 import { Solutions } from "@/components/Solutions";
+import { HowWeWork } from "@/components/HowWeWork";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 
@@ -18,6 +19,7 @@ export default function Home() {
         <Services />
         <Solutions />
         <WhyUnivarq />
+        <HowWeWork />
         <About />
         <Contact />
       </main>
