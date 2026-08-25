@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Mark } from "./Mark";
+import content from "@/content/homepage.json";
+
+const { site } = content;
 
 const NAV_LINKS = [
   { href: "#home", label: "Home" },
@@ -12,8 +15,6 @@ const NAV_LINKS = [
   { href: "#about", label: "About" },
   { href: "#contact", label: "Contact" },
 ];
-
-const CTA_LABEL = "Tell us what you're trying to build";
 
 export function Header() {
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -104,7 +105,7 @@ export function Header() {
               href="#contact"
               className="shrink-0 bg-brass px-4.5 py-3.5 font-body text-[13.5px] font-medium text-ink transition-colors hover:bg-brass-hover"
             >
-              {CTA_LABEL}
+              {site.ctaLabel}
             </a>
           </nav>
         </div>

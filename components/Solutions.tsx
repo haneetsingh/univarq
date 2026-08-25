@@ -1,37 +1,6 @@
-const SOLUTIONS = [
-  {
-    term: "Business Applications",
-    description:
-      "Customer portals, internal platforms, operational systems and enterprise applications.",
-  },
-  {
-    term: "Digital Platforms",
-    description: "Web platforms and products designed to grow.",
-  },
-  {
-    term: "Data & AI Solutions",
-    description:
-      "Data pipelines, intelligent workflows, AI-enabled products and automation.",
-  },
-  {
-    term: "Cloud & Platform Engineering",
-    description:
-      "Cloud architecture, infrastructure, deployment pipelines and platform modernization.",
-  },
-  {
-    term: "Integrations",
-    description: "APIs, third-party integrations and systems that need to work together.",
-  },
-];
+import content from "@/content/homepage.json";
 
-const FIT_ITEMS = [
-  "Have a complex system but not enough engineering capacity to own it.",
-  "Need to modernize without stopping the business.",
-  "Are starting a new product or platform.",
-  "Need someone to take ownership of a difficult technical initiative.",
-  "Have too many systems that do not talk to each other.",
-  "Want to introduce AI into an existing workflow without chasing hype.",
-];
+const { solutions } = content;
 
 export function Solutions() {
   return (
@@ -39,22 +8,21 @@ export function Solutions() {
       <div className="mx-auto max-w-6xl">
         <div className="grid items-end gap-6 sm:grid-cols-2">
           <div>
-            <p className="label mb-4 text-brass">02 &middot; Solutions</p>
+            <p className="label mb-4 text-brass">{solutions.eyebrow}</p>
             <h2
               className="font-display font-semibold text-paper"
               style={{ fontSize: "clamp(30px, 4.2vw, 46px)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
             >
-              Five kinds of work.
+              {solutions.heading}
             </h2>
           </div>
           <p className="text-grey" style={{ fontSize: 17, fontWeight: 300 }}>
-            We choose technology based on the problem, not the other way
-            around.
+            {solutions.subheading}
           </p>
         </div>
 
         <dl className="mt-11 border-t border-rule">
-          {SOLUTIONS.map((item) => (
+          {solutions.items.map((item) => (
             <div
               key={item.term}
               className="grid gap-2 border-b border-rule py-5.5"
@@ -78,10 +46,10 @@ export function Solutions() {
             className="max-w-[18ch] font-display font-semibold text-paper"
             style={{ fontSize: 26, letterSpacing: "-0.025em" }}
           >
-            Built for teams that need to move.
+            {solutions.fitHeading}
           </h3>
           <ul className="flex flex-col gap-3.5">
-            {FIT_ITEMS.map((item) => (
+            {solutions.fitItems.map((item) => (
               <li key={item} className="grid gap-2" style={{ gridTemplateColumns: "20px 1fr" }}>
                 <span
                   aria-hidden="true"
@@ -100,8 +68,7 @@ export function Solutions() {
           className="mt-6 font-display text-paper"
           style={{ fontSize: 19, fontWeight: 400, letterSpacing: "-0.02em" }}
         >
-          If the problem is complicated, that is usually where we are most
-          useful.
+          {solutions.closingLine}
         </p>
       </div>
     </section>

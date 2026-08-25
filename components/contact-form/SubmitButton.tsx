@@ -1,6 +1,7 @@
 import { Spinner } from "../icons/Spinner";
+import content from "@/content/homepage.json";
 
-const CTA_LABEL = "Tell us what you're trying to build";
+const { site, contact } = content;
 
 export function SubmitButton({ submitting }: { submitting: boolean }) {
   return (
@@ -21,10 +22,10 @@ export function SubmitButton({ submitting }: { submitting: boolean }) {
         }}
       >
         {submitting && <Spinner />}
-        {submitting ? "Sending…" : CTA_LABEL}
+        {submitting ? "Sending…" : site.ctaLabel}
       </button>
       <p className="text-[14px]" style={{ color: "var(--color-faint)" }}>
-        We respond within one business day. No sales sequence.
+        {contact.responseNote}
       </p>
     </div>
   );

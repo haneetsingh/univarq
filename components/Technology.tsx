@@ -1,16 +1,6 @@
-const TECHNOLOGY = [
-  { term: "Frontend", description: "React · Next.js · Angular · TypeScript" },
-  { term: "Backend", description: "Node.js · Python · APIs · GraphQL" },
-  {
-    term: "Cloud & Platform",
-    description: "AWS · Azure · Cloud infrastructure · CI/CD",
-  },
-  { term: "Data", description: "PostgreSQL · MongoDB · Data pipelines" },
-  {
-    term: "AI",
-    description: "AI integration · Intelligent workflows · Automation",
-  },
-];
+import content from "@/content/homepage.json";
+
+const { technology } = content;
 
 export function Technology() {
   return (
@@ -18,22 +8,21 @@ export function Technology() {
       <div className="mx-auto max-w-6xl">
         <div className="grid items-end gap-6 sm:grid-cols-2">
           <div>
-            <p className="label mb-4 text-brass">07 &middot; Technology</p>
+            <p className="label mb-4 text-brass">{technology.eyebrow}</p>
             <h2
               className="font-display font-semibold text-paper"
               style={{ fontSize: "clamp(30px, 4.2vw, 46px)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
             >
-              A snapshot, not a limit.
+              {technology.heading}
             </h2>
           </div>
           <p className="text-grey" style={{ fontSize: 17, fontWeight: 300 }}>
-            We work across the modern stack. This is what we reach for most,
-            not the limit of what we can do.
+            {technology.subheading}
           </p>
         </div>
 
         <dl className="mt-11 border-t border-rule">
-          {TECHNOLOGY.map((item) => (
+          {technology.items.map((item) => (
             <div
               key={item.term}
               className="grid gap-1.5 border-b border-rule py-5"
@@ -51,8 +40,7 @@ export function Technology() {
           className="mt-6 font-display text-paper"
           style={{ fontSize: 19, fontWeight: 400, letterSpacing: "-0.02em" }}
         >
-          We choose technology based on the problem, not the other way
-          around.
+          {technology.closingLine}
         </p>
       </div>
     </section>

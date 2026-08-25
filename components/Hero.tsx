@@ -1,20 +1,6 @@
-const ENGAGEMENT_MODELS = [
-  {
-    number: "01",
-    title: "Build",
-    description: "We own it, architecture through production.",
-  },
-  {
-    number: "02",
-    title: "Embed",
-    description: "We work inside your engineering team.",
-  },
-  {
-    number: "03",
-    title: "Modernize",
-    description: "Legacy systems made ready for what's next.",
-  },
-];
+import content from "@/content/homepage.json";
+
+const { hero } = content;
 
 export function Hero() {
   return (
@@ -24,7 +10,7 @@ export function Hero() {
       style={{ gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))" }}
     >
       <div>
-        <p className="label mb-7 text-brass">Software Engineering &amp; Consulting</p>
+        <p className="label mb-7 text-brass">{hero.eyebrow}</p>
         <h1
           className="max-w-[19ch] font-display font-semibold text-paper"
           style={{
@@ -33,39 +19,37 @@ export function Hero() {
             letterSpacing: "-0.035em",
           }}
         >
-          One team. Every layer of the stack.
+          {hero.heading}
         </h1>
         <p className="mt-7.5 max-w-[54ch] text-body" style={{ fontSize: "clamp(17px, 1.5vw, 20px)", lineHeight: 1.65, fontWeight: 300 }}>
-          Univarq takes ownership of complex technology initiatives. We come
-          in as a build partner, an embedded team or a modernization
-          partner, whichever the problem calls for.
+          {hero.lede}
         </p>
         <div className="mt-10.5 flex flex-wrap items-center gap-3.5">
           <a
             href="#contact"
             className="bg-brass px-6.5 py-4.5 text-sm font-medium text-ink transition-colors hover:bg-brass-hover"
           >
-            Tell us what you&rsquo;re trying to build
+            {hero.primaryCta}
           </a>
           <a
             href="#case-studies"
             className="border border-rule-strong px-6.5 py-4.5 text-sm font-medium text-paper transition-colors hover:border-brass"
           >
-            See case studies
+            {hero.secondaryCta}
           </a>
         </div>
       </div>
 
       <div className="border border-rule bg-slate p-7 sm:p-8.5">
-        <p className="label mb-5.5 text-grey">Engagement models</p>
+        <p className="label mb-5.5 text-grey">{hero.engagementModelsHeading}</p>
         <div>
-          {ENGAGEMENT_MODELS.map((model, i) => (
+          {hero.engagementModels.map((model, i) => (
             <div
               key={model.number}
               className="grid grid-cols-[28px_1fr] gap-3.5 py-4.5"
               style={{
                 borderBottom:
-                  i < ENGAGEMENT_MODELS.length - 1 ? "1px solid var(--color-rule)" : "none",
+                  i < hero.engagementModels.length - 1 ? "1px solid var(--color-rule)" : "none",
               }}
             >
               <span className="font-label text-[13px]" style={{ color: "var(--color-blueprint)" }}>
@@ -86,8 +70,7 @@ export function Hero() {
           ))}
         </div>
         <p className="mt-5.5 border-t border-rule pt-5.5 text-grey" style={{ fontSize: "13.5px", fontWeight: 300 }}>
-          Agreed before anything starts, so you know how we&rsquo;re working
-          together, not just who&rsquo;s on the call.
+          {hero.footnote}
         </p>
       </div>
     </section>

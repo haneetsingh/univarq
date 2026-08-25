@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { Mark } from "./Mark";
 import { ContactForm } from "./ContactForm";
 import type { SuccessInfo } from "./contact-form/utils";
+import content from "@/content/homepage.json";
+
+const { contact } = content;
 
 export function Contact() {
   const [success, setSuccess] = useState<SuccessInfo | null>(null);
@@ -23,32 +26,30 @@ export function Contact() {
         style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))" }}
       >
         <div>
-          <p className="label mb-4 text-brass">10 &middot; Contact</p>
+          <p className="label mb-4 text-brass">{contact.eyebrow}</p>
           <h2
             className="max-w-[18ch] font-display font-semibold text-paper"
             style={{ fontSize: "clamp(30px, 4.2vw, 46px)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
           >
-            Tell us what you&rsquo;re trying to build.
+            {contact.heading}
           </h2>
           <p className="mt-6 max-w-[46ch] text-body" style={{ fontSize: 17, fontWeight: 300, lineHeight: 1.7 }}>
-            Tell us what you&rsquo;re building and your rough timeline. An
-            engineer reads every message, so the reply comes from whoever
-            would actually do the work.
+            {contact.body}
           </p>
           <div className="mt-9 flex flex-col gap-3 border-t border-rule pt-6">
             <p className="text-grey" style={{ fontSize: 15 }}>
               Prefer a call?{" "}
-              <a href="#" className="text-brass transition-colors hover:text-brass-hover">
-                Book 20 minutes
+              <a href={contact.bookCallUrl} className="text-brass transition-colors hover:text-brass-hover">
+                {contact.bookCallLabel}
               </a>
             </p>
             <p className="text-grey" style={{ fontSize: 15 }}>
               Or email{" "}
               <a
-                href="mailto:info@univarq.io"
+                href={`mailto:${contact.email}`}
                 className="text-brass transition-colors hover:text-brass-hover"
               >
-                info@univarq.io
+                {contact.email}
               </a>
             </p>
           </div>
@@ -60,7 +61,7 @@ export function Contact() {
               <Mark size={40} keystoneColor="success" />
               <div>
                 <h3 className="font-display font-semibold text-paper" style={{ fontSize: 22 }}>
-                  Message received.
+                  {contact.successHeading}
                 </h3>
                 <p className="mt-2 text-body" style={{ fontSize: "16.5px", fontWeight: 300, lineHeight: 1.7 }}>
                   Thanks, {success.name.split(" ")[0]}. We sent a copy to{" "}

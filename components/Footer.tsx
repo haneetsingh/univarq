@@ -1,22 +1,7 @@
 import { Mark } from "./Mark";
+import content from "@/content/homepage.json";
 
-const SERVICES = [
-  "Software Engineering",
-  "Cloud & Platform",
-  "Data & AI",
-  "System Integration",
-  "Modernization",
-  "Engineering Teams",
-];
-
-const COMPANY_LINKS = [
-  { href: "#about", label: "About" },
-  { href: "#case-studies", label: "Case Studies" },
-  { href: "#solutions", label: "Solutions" },
-  { href: "#contact", label: "Contact" },
-];
-
-const CTA_LABEL = "Tell us what you're trying to build";
+const { footer, site } = content;
 
 export function Footer() {
   return (
@@ -33,14 +18,14 @@ export function Footer() {
             </span>
           </div>
           <p className="font-display text-paper" style={{ fontSize: 19 }}>
-            Engineering the systems businesses depend on.
+            {footer.tagline}
           </p>
           <a
             href="#contact"
             className="w-fit border-b text-brass transition-colors hover:text-brass-hover"
             style={{ borderBottomColor: "rgba(192,138,62,.45)" }}
           >
-            {CTA_LABEL} &rarr;
+            {site.ctaLabel} &rarr;
           </a>
         </div>
 
@@ -49,9 +34,9 @@ export function Footer() {
           style={{ flexBasis: 400, gridTemplateColumns: "repeat(auto-fit, minmax(118px, 1fr))" }}
         >
           <div>
-            <p className="label mb-4 text-grey">Services</p>
+            <p className="label mb-4 text-grey">{footer.servicesHeading}</p>
             <ul className="flex flex-col gap-2.5">
-              {SERVICES.map((item) => (
+              {footer.services.map((item) => (
                 <li key={item} className="text-body" style={{ fontSize: 15, fontWeight: 300 }}>
                   {item}
                 </li>
@@ -60,9 +45,9 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="label mb-4 text-grey">Company</p>
+            <p className="label mb-4 text-grey">{footer.companyHeading}</p>
             <ul className="flex flex-col gap-2.5">
-              {COMPANY_LINKS.map((link) => (
+              {footer.companyLinks.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
@@ -77,11 +62,11 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="label mb-4 text-grey">Connect</p>
+            <p className="label mb-4 text-grey">{footer.connectHeading}</p>
             <ul className="flex flex-col gap-2.5">
               <li>
                 <a
-                  href="https://linkedin.com/company/univarq"
+                  href={footer.linkedinUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-body transition-colors hover:text-paper"
@@ -92,11 +77,11 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:info@univarq.io"
+                  href={`mailto:${footer.email}`}
                   className="text-body transition-colors hover:text-paper"
                   style={{ fontSize: 15, fontWeight: 300 }}
                 >
-                  info@univarq.io
+                  {footer.email}
                 </a>
               </li>
             </ul>
@@ -109,7 +94,7 @@ export function Footer() {
           &copy; {new Date().getFullYear()} Univarq Technologies
         </p>
         <p className="font-label" style={{ fontSize: "11.5px", letterSpacing: "0.1em", color: "var(--color-faint)" }}>
-          Build &middot; Embed &middot; Modernize
+          {footer.legalLine}
         </p>
       </div>
     </footer>
