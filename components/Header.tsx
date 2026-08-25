@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Mark } from "./Mark";
+import { MobileMenu } from "./MobileMenu";
+import { Button } from "./Button";
 import content from "@/content/homepage.json";
 
 const { site } = content;
@@ -16,8 +18,12 @@ const NAV_LINKS = [
   { href: "#contact", label: "Contact" },
 ];
 
+const MOBILE_LINKS = NAV_LINKS.filter((link) => link.href !== "#home");
+
 export function Header() {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [compact, setCompact] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const sectionsRef = useRef<HTMLElement[]>([]);
 
   useEffect(() => {
@@ -56,6 +62,20 @@ export function Header() {
     };
   }, []);
 
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 880px)");
+    function apply(matches: boolean) {
+      setCompact(matches);
+      if (!matches) setMenuOpen(false);
+    }
+    apply(mql.matches);
+    function onChange(e: MediaQueryListEvent) {
+      apply(e.matches);
+    }
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
   return (
     <>
       <a
@@ -80,36 +100,53 @@ export function Header() {
             </span>
           </Link>
 
-          <nav
-            aria-label="Primary"
-            className="ml-auto flex flex-wrap items-center justify-end gap-x-6 gap-y-3.5"
-          >
-            {NAV_LINKS.map((link) => {
-              const isActive = activeId === link.href.slice(1);
-              return (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  aria-current={isActive ? "true" : undefined}
-                  className="border-b pb-1.25 font-body text-sm transition-colors"
-                  style={{
-                    color: isActive ? "var(--color-paper)" : "var(--color-grey)",
-                    borderBottomColor: isActive ? "var(--color-brass)" : "transparent",
-                  }}
-                >
-                  {link.label}
-                </a>
-              );
-            })}
-            <a
-              href="#contact"
-              className="shrink-0 bg-brass px-4.5 py-3.5 font-body text-[13.5px] font-medium text-ink transition-colors hover:bg-brass-hover"
+          {compact ? (
+            <Button
+              variant="icon"
+              className="ml-auto"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              onClick={() => setMenuOpen((open) => !open)}
+              icon={
+                <span className="flex flex-col gap-1.5">
+                  <span className="block h-[1.5px] w-5 bg-paper" />
+                  <span className="block h-[1.5px] w-5 bg-paper" />
+                  <span className="block h-[1.5px] w-5 bg-paper" />
+                </span>
+              }
             >
-              {site.ctaLabel}
-            </a>
-          </nav>
+              {menuOpen ? "Close menu" : "Open menu"}
+            </Button>
+          ) : (
+            <nav
+              aria-label="Primary"
+              className="ml-auto flex flex-wrap items-center justify-end gap-x-6 gap-y-3.5"
+            >
+              {NAV_LINKS.map((link) => {
+                const isActive = activeId === link.href.slice(1);
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    aria-current={isActive ? "true" : undefined}
+                    className="border-b pb-1.25 font-body text-sm transition-colors"
+                    style={{
+                      color: isActive ? "var(--color-paper)" : "var(--color-grey)",
+                      borderBottomColor: isActive ? "var(--color-brass)" : "transparent",
+                    }}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
+              <Button as="a" href="#contact" size="sm" className="font-body">
+                {site.ctaLabel}
+              </Button>
+            </nav>
+          )}
         </div>
       </header>
+      <MobileMenu links={MOBILE_LINKS} open={menuOpen} onClose={() => setMenuOpen(false)} />
     </>
   );
 }
