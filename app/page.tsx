@@ -8,6 +8,7 @@ import { Solutions } from "@/components/Solutions";
 import { HowWeWork } from "@/components/HowWeWork";
 import { Industries } from "@/components/Industries";
 import { CaseStudies } from "@/components/CaseStudies";
+import { Technology } from "@/components/Technology";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 
@@ -24,6 +25,7 @@ export default function Home() {
         <HowWeWork />
         <Industries />
         <CaseStudies />
+        <Technology />
         <About />
         <Contact />
       </main>
