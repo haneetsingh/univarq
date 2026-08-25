@@ -12,6 +12,7 @@ import { Technology } from "@/components/Technology";
 import { Faq } from "@/components/Faq";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
+import { Reveal } from "@/components/Reveal";
 
 export default function Home() {
   return (
@@ -20,16 +21,36 @@ export default function Home() {
       <main id="main" className="flex-1">
         <Hero />
         <Positioning />
-        <Services />
-        <Solutions />
-        <WhyUnivarq />
-        <HowWeWork />
-        <Industries />
-        <CaseStudies />
-        <Technology />
-        <About />
-        <Faq />
-        <Contact />
+        <Reveal>
+          <Services />
+        </Reveal>
+        <Reveal>
+          <Solutions />
+        </Reveal>
+        <Reveal>
+          <WhyUnivarq />
+        </Reveal>
+        <Reveal>
+          <HowWeWork />
+        </Reveal>
+        <Reveal>
+          <Industries />
+        </Reveal>
+        <Reveal>
+          <CaseStudies />
+        </Reveal>
+        <Reveal>
+          <Technology />
+        </Reveal>
+        <Reveal>
+          <About />
+        </Reveal>
+        <Reveal>
+          <Faq />
+        </Reveal>
+        <Reveal>
+          <Contact />
+        </Reveal>
       </main>
       <Footer />
     </>
