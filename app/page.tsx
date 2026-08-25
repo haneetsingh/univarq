@@ -9,6 +9,7 @@ import { HowWeWork } from "@/components/HowWeWork";
 import { Industries } from "@/components/Industries";
 import { CaseStudies } from "@/components/CaseStudies";
 import { Technology } from "@/components/Technology";
+import { Faq } from "@/components/Faq";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 
@@ -27,6 +28,7 @@ export default function Home() {
         <CaseStudies />
         <Technology />
         <About />
+        <Faq />
         <Contact />
       </main>
       <Footer />
