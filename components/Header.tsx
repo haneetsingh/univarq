@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { Mark } from "./Mark";
 import { MobileMenu } from "./MobileMenu";
 import { Button } from "./Button";
@@ -86,7 +85,7 @@ export function Header() {
       </a>
       <header className="sticky top-0 z-50 border-b border-rule bg-ink/92 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-3 px-6 py-4 sm:px-8">
-          <Link
+          <a
             href="#home"
             aria-label="Univarq home"
             className="flex items-center gap-2.5"
@@ -98,7 +97,7 @@ export function Header() {
             >
               Univarq
             </span>
-          </Link>
+          </a>
 
           {compact ? (
             <Button
