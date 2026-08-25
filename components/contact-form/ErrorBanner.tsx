@@ -6,8 +6,8 @@ type ErrorBannerProps = {
 };
 
 function summaryText(invalidCount: number) {
-  if (invalidCount <= 1) return "That needs a second look";
-  return `${invalidCount} fields need attention`;
+  if (invalidCount <= 1) return "One field needs attention.";
+  return `${invalidCount} fields need attention.`;
 }
 
 export function ErrorBanner({ networkError, invalidCount }: ErrorBannerProps) {
@@ -22,13 +22,11 @@ export function ErrorBanner({ networkError, invalidCount }: ErrorBannerProps) {
     >
       <ErrorIcon />
       <div className="flex flex-col gap-1">
-        <span className="text-[15px] font-medium text-paper">
-          {networkError ? "Couldn't reach us" : summaryText(invalidCount)}
-        </span>
-        <span className="text-[13.5px] leading-snug text-body">
+        <span className="text-[15px] font-medium text-paper">Nothing was sent.</span>
+        <span className="text-[13.5px] leading-snug" style={{ color: "var(--color-error-summary)" }}>
           {networkError
             ? "Your message is still here. Try again, or email info@univarq.io."
-            : "Nothing was sent. Fix the highlighted fields and try again."}
+            : summaryText(invalidCount)}
         </span>
       </div>
     </div>

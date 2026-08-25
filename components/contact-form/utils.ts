@@ -6,25 +6,27 @@ export const MESSAGE_MAX = 1200;
 
 export function validateField(name: FieldName, value: string): string | undefined {
   const trimmed = value.trim();
-  if (name === "name" && !trimmed) return "Enter your name.";
+  if (name === "name" && !trimmed) return "Tell us your name.";
   if (name === "email") {
-    if (!trimmed) return "Enter a work email.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-      return "Enter a complete email address.";
+    if (!trimmed) return "We need an email to reply to.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(trimmed)) {
+      return "That email address does not look right.";
     }
   }
-  if (name === "message" && trimmed.length < 8) {
-    return "Tell us a sentence or two about the problem.";
+  if (name === "message") {
+    if (!trimmed) return "A sentence or two about the problem is enough.";
+    if (trimmed.length < 12) return "A little more detail helps us reply usefully.";
   }
   return undefined;
 }
 
 export function referenceId() {
-  const now = new Date();
-  const yy = String(now.getFullYear()).slice(-2);
-  const mm = String(now.getMonth() + 1).padStart(2, "0");
-  const suffix = Math.floor(1000 + Math.random() * 9000);
-  return `UVQ-${yy}${mm}-${suffix}`;
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let suffix = "";
+  for (let i = 0; i < 5; i++) {
+    suffix += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return `UVQ-${suffix}`;
 }
 
 export type SuccessInfo = {

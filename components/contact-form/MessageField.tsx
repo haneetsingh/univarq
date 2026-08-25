@@ -37,7 +37,7 @@ export function MessageField({
         required
         disabled={disabled}
         maxLength={MESSAGE_MAX}
-        placeholder="A new build, an embedded team or a system that needs modernizing."
+        placeholder="The problem, the system it touches and your rough timeline."
         aria-invalid={Boolean(error)}
         aria-describedby={error ? "message-error" : undefined}
         onBlur={onBlur}

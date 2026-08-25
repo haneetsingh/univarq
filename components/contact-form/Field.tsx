@@ -12,6 +12,7 @@ type FieldProps = {
   disabled?: boolean;
   error?: string;
   placeholder?: string;
+  autoComplete?: string;
   onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
   onChange?: () => void;
 };
@@ -26,6 +27,7 @@ export function Field({
   disabled,
   error,
   placeholder,
+  autoComplete,
   onBlur,
   onChange,
 }: FieldProps) {
@@ -42,6 +44,7 @@ export function Field({
         required={required}
         disabled={disabled}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
         onBlur={onBlur}
