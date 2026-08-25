@@ -154,7 +154,7 @@
       "You work with the engineers directly. There's no account manager between the problem and the people solving it and no handoff from a sales layer to a delivery layer. The engineers who scope an engagement build it and stay involved through production."
     ],
     "linkedinLabel": "Univarq on LinkedIn →",
-    "linkedinUrl": "https://linkedin.com/company/univarq",
+    "linkedinUrl": "https://www.linkedin.com/company/univarq/",
     "email": "info@univarq.io"
   },
   "faq": {
@@ -187,8 +187,6 @@
     "eyebrow": "10 · Contact",
     "heading": "Tell us what you're trying to build.",
     "body": "Tell us what you're building and your rough timeline. An engineer reads every message, so the reply comes from whoever would actually do the work.",
-    "bookCallLabel": "Book 20 minutes",
-    "bookCallUrl": "#",
     "email": "info@univarq.io",
     "successHeading": "Message received.",
     "responseNote": "We respond within one business day. No sales sequence."
@@ -205,7 +203,7 @@
       { "href": "#contact", "label": "Contact" }
     ],
     "connectHeading": "Connect",
-    "linkedinUrl": "https://linkedin.com/company/univarq",
+    "linkedinUrl": "https://www.linkedin.com/company/univarq/",
     "email": "info@univarq.io",
     "legalLine": "Build · Embed · Modernize"
   },

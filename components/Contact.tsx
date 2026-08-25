@@ -38,12 +38,6 @@ export function Contact() {
           </p>
           <div className="mt-9 flex flex-col gap-3 border-t border-rule pt-6">
             <p className="text-grey" style={{ fontSize: 15 }}>
-              Prefer a call?{" "}
-              <a href={contact.bookCallUrl} className="text-brass transition-colors hover:text-brass-hover">
-                {contact.bookCallLabel}
-              </a>
-            </p>
-            <p className="text-grey" style={{ fontSize: 15 }}>
               Or email{" "}
               <a
                 href={`mailto:${contact.email}`}
