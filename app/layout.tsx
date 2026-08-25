@@ -5,13 +5,13 @@ import "./globals.css";
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["500", "600"],
 });
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["300", "400", "500"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -22,31 +22,33 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://univarq.io"),
-  title: "Univarq — One team. Every layer of the stack.",
+  title:
+    "Univarq Technologies. Build, embed or modernize. Software engineering partner",
   description:
-    "Univarq takes ownership of technology problems from first sketch to production, whether that's frontend, backend, cloud, data or AI.",
+    "Univarq takes ownership of complex technology initiatives. We come in as a build partner, an embedded team or a modernization partner, whichever the problem calls for.",
   icons: {
     icon: [
-      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/favicon-16.png", sizes: "16x16", type: "image/png" },
     ],
-    apple: [{ url: "/apple-touch-icon.png" }],
+    apple: [{ url: "/brand/favicon-180.png" }],
   },
   openGraph: {
-    title: "Univarq — One team. Every layer of the stack.",
+    title: "Univarq Technologies. One team. Every layer of the stack.",
     description:
-      "Univarq takes ownership of technology problems from first sketch to production, whether that's frontend, backend, cloud, data or AI.",
+      "An engineering partner that takes ownership of complex technology initiatives. Build, embed or modernize.",
     url: "https://univarq.io",
     siteName: "Univarq",
-    images: [{ url: "/og-univarq.png", width: 1200, height: 630 }],
+    images: [{ url: "/brand/og-univarq-1200x630.png", width: 1200, height: 630 }],
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Univarq — One team. Every layer of the stack.",
-    description: "We build systems. We don't disappear after the demo.",
-    images: ["/og-univarq.png"],
+    title: "Univarq Technologies. One team. Every layer of the stack.",
+    description:
+      "An engineering partner that takes ownership of complex technology initiatives. Build, embed or modernize.",
+    images: ["/brand/og-univarq-1200x630.png"],
   },
 };
 

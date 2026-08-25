@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { Mark } from "./Mark";
 import { ContactForm } from "./ContactForm";
 import type { SuccessInfo } from "./contact-form/utils";
+import content from "@/content/homepage.json";
+
+const { contact } = content;
 
 export function Contact() {
   const [success, setSuccess] = useState<SuccessInfo | null>(null);
@@ -16,63 +19,56 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="border-t border-rule px-6 py-22 sm:px-8"
+      className="border-t border-rule px-6 pb-16 pt-14 sm:px-8 sm:pb-26 sm:pt-22"
     >
-      <div className="mx-auto flex max-w-6xl flex-col items-start gap-8 border border-rule bg-slate p-11 sm:p-16">
-        <p className="label mb-4">
-          <a href="#contact" className="text-brass no-underline hover:underline">
-            04 — Contact
-          </a>
-        </p>
-
-        {success ? (
-          <div
-            ref={successRef}
-            tabIndex={-1}
-            className="flex w-full flex-col items-start gap-7 outline-none"
+      <div
+        className="mx-auto grid max-w-6xl gap-11"
+        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))" }}
+      >
+        <div>
+          <p className="label mb-4 text-brass">{contact.eyebrow}</p>
+          <h2
+            className="max-w-[18ch] font-display font-semibold text-paper"
+            style={{ fontSize: "clamp(30px, 4.2vw, 46px)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
           >
-            <div className="flex items-center gap-4.5">
-              <Mark size={52} keystoneColor="success" />
-              <div className="flex flex-col gap-1.5">
-                <span className="label" style={{ color: "var(--color-success)" }}>
-                  Message received
-                </span>
-                <h2
-                  className="font-display font-medium text-paper"
-                  style={{ fontSize: 30, letterSpacing: "-0.02em", lineHeight: 1.15 }}
-                >
-                  Got it{success.name ? `, ${success.name.split(" ")[0]}` : ""}.
-                </h2>
-              </div>
-            </div>
-            <p className="max-w-[44ch] text-body" style={{ textWrap: "pretty" }}>
-              A copy is on its way to{" "}
-              <span className="text-paper">{success.email}</span>. Someone
-              on the team will look it over and get in touch.
+            {contact.heading}
+          </h2>
+          <p className="mt-6 max-w-[46ch] text-body" style={{ fontSize: 17, fontWeight: 300, lineHeight: 1.7 }}>
+            {contact.body}
+          </p>
+          <div className="mt-9 flex flex-col gap-3 border-t border-rule pt-6">
+            <p className="text-grey" style={{ fontSize: 15 }}>
+              Or email{" "}
+              <a
+                href={`mailto:${contact.email}`}
+                className="text-brass transition-colors hover:text-brass-hover"
+              >
+                {contact.email}
+              </a>
             </p>
-            <div className="flex w-full flex-col gap-3 border-t border-rule pt-6">
-              <span className="label text-grey">Reference</span>
-              <span className="label" style={{ color: "var(--color-paper)", letterSpacing: 0 }}>
-                {success.reference}
-              </span>
-            </div>
           </div>
-        ) : (
-          <>
-            <h2
-              className="max-w-2xl font-display font-semibold text-paper"
-              style={{ fontSize: "clamp(1.75rem, 3.5vw, 3rem)" }}
-            >
-              Tell us what you&rsquo;re trying to build.
-            </h2>
-            <p className="max-w-[62ch] text-body">
-              Send us a brief description of the problem, whether
-              it&rsquo;s a new build, an embedded team or a system that
-              needs modernizing. We respond within one business day.
-            </p>
+        </div>
+
+        <div className="border border-rule bg-slate p-7 sm:p-10">
+          {success ? (
+            <div ref={successRef} tabIndex={-1} className="flex flex-col items-start gap-6 outline-none">
+              <Mark size={40} keystoneColor="success" />
+              <div>
+                <h3 className="font-display font-semibold text-paper" style={{ fontSize: 22 }}>
+                  {contact.successHeading}
+                </h3>
+                <p className="mt-2 text-body" style={{ fontSize: "16.5px", fontWeight: 300, lineHeight: 1.7 }}>
+                  Thanks, {success.name.split(" ")[0]}. We sent a copy to{" "}
+                  <span className="text-paper">{success.email}</span> and
+                  will reply within one business day.
+                </p>
+              </div>
+              <p className="font-label text-[11px] text-grey">REFERENCE {success.reference}</p>
+            </div>
+          ) : (
             <ContactForm onSuccess={setSuccess} />
-          </>
-        )}
+          )}
+        </div>
       </div>
     </section>
   );

@@ -1,0 +1,215 @@
+{
+  "hero": {
+    "eyebrow": "Software Engineering & Consulting",
+    "heading": "One team. Every layer of the stack.",
+    "lede": "Univarq takes ownership of complex technology initiatives. We come in as a build partner, an embedded team or a modernization partner, whichever the problem calls for.",
+    "primaryCta": "Tell us what you're trying to build",
+    "secondaryCta": "See case studies",
+    "engagementModelsHeading": "Engagement models",
+    "engagementModels": [
+      { "number": "01", "title": "Build", "description": "We own it, architecture through production." },
+      { "number": "02", "title": "Embed", "description": "We work inside your engineering team." },
+      { "number": "03", "title": "Modernize", "description": "Legacy systems made ready for what's next." }
+    ],
+    "footnote": "Agreed before anything starts, so you know how we're working together, not just who's on the call."
+  },
+  "positioning": {
+    "quote": "We're a small team that takes on complex technical work other teams don't have the capacity to own.",
+    "body": "The people who scope the work are the people who build it. There's no handoff to a delivery team and nothing gets lost between the architecture conversation and the code. One team stays accountable for the system in production, across application, data and cloud."
+  },
+  "services": {
+    "eyebrow": "01 · Services",
+    "heading": "Three ways to bring us in.",
+    "items": [
+      {
+        "number": "01",
+        "title": "Build",
+        "description": "You have a problem. We build the solution. From a new application to a complete platform, Univarq takes ownership from architecture through production."
+      },
+      {
+        "number": "02",
+        "title": "Embed",
+        "description": "Add engineering capacity without adding layers. Work directly with the engineering organization to solve hard problems, accelerate delivery and fill critical technical gaps."
+      },
+      {
+        "number": "03",
+        "title": "Modernize",
+        "description": "Make existing systems ready for what comes next. Modernize legacy applications, architectures and infrastructure without forcing unnecessary rewrites."
+      }
+    ]
+  },
+  "solutions": {
+    "eyebrow": "02 · Solutions",
+    "heading": "Five kinds of work.",
+    "subheading": "We choose technology based on the problem, not the other way around.",
+    "items": [
+      { "term": "Business Applications", "description": "Customer portals, internal platforms, operational systems and enterprise applications." },
+      { "term": "Digital Platforms", "description": "Web platforms and products designed to grow." },
+      { "term": "Data & AI Solutions", "description": "Data pipelines, intelligent workflows, AI-enabled products and automation." },
+      { "term": "Cloud & Platform Engineering", "description": "Cloud architecture, infrastructure, deployment pipelines and platform modernization." },
+      { "term": "Integrations", "description": "APIs, third-party integrations and systems that need to work together." }
+    ],
+    "fitHeading": "Built for teams that need to move.",
+    "fitItems": [
+      "Have a complex system but not enough engineering capacity to own it.",
+      "Need to modernize without stopping the business.",
+      "Are starting a new product or platform.",
+      "Need someone to take ownership of a difficult technical initiative.",
+      "Have too many systems that do not talk to each other.",
+      "Want to introduce AI into an existing workflow without chasing hype."
+    ],
+    "closingLine": "If the problem is complicated, that is usually where we are most useful."
+  },
+  "whyUnivarq": {
+    "eyebrow": "03 · Why Univarq",
+    "heading": "Three things you can check.",
+    "items": [
+      {
+        "title": "The engagement model is agreed up front",
+        "description": "Every engagement runs as a Build, an Embed or a Modernize, settled before anything starts. You know how we're working together, not just who happens to be on the call."
+      },
+      {
+        "title": "We finish in production",
+        "description": "The engagement isn't done when a document lands. It's done when the system runs and the team that owns it can operate it, with the architecture decisions written down."
+      },
+      {
+        "title": "Small by design",
+        "description": "We take on a few engagements at a time. That is the whole reason the other two claims hold up. If we aren't the right fit for the problem, we'll say so in the first conversation."
+      }
+    ]
+  },
+  "howWeWork": {
+    "eyebrow": "04 · How we work",
+    "heading": "Five steps, one team.",
+    "steps": [
+      { "number": "01", "title": "Understand", "description": "Start with the problem, not the technology." },
+      { "number": "02", "title": "Architect", "description": "Define the technical approach, scope and path to production." },
+      { "number": "03", "title": "Build", "description": "The same team designs and builds the solution." },
+      { "number": "04", "title": "Ship", "description": "Take the solution through testing, deployment and production." },
+      { "number": "05", "title": "Improve", "description": "Stay involved where needed and keep improving what was built." }
+    ]
+  },
+  "industries": {
+    "eyebrow": "05 · Industries",
+    "heading": "Where we've worked.",
+    "items": [
+      { "term": "Insurance", "description": "We build the platforms and internal applications insurers run on, and modernize the workflows behind them." },
+      { "term": "Banking & Financial Services", "description": "Banking and financing platforms, data-heavy applications and the integrations that tie them to the rest of the financial stack." },
+      { "term": "Supply Chain & Logistics", "description": "Operational platforms and risk intelligence that make a multi-tier supply network legible." },
+      { "term": "Enterprise Technology", "description": "Modernization work, cloud engineering and application platforms built to grow with the business." },
+      { "term": "Healthcare & Life Sciences", "description": "Clinical and operational systems built to meet real integration and audit requirements." },
+      { "term": "Real Estate & Construction", "description": "Project, asset and transaction platforms that replace spreadsheet-driven process." },
+      { "term": "Manufacturing & Industrial", "description": "Production data and operational visibility, joined up across plant and enterprise systems." },
+      { "term": "Professional Services", "description": "Client portals, billing and delivery platforms for process-driven firms." }
+    ]
+  },
+  "caseStudies": {
+    "eyebrow": "06 · Case studies",
+    "heading": "Three platforms we took ownership of.",
+    "items": [
+      {
+        "number": "01",
+        "client": "A global insurance company",
+        "title": "Enterprise modernization",
+        "challenge": "Modernize a large enterprise platform while enabling multiple teams to deliver independently.",
+        "approach": "A micro-frontend architecture with federated GraphQL underneath it.",
+        "outcome": "Teams ship independently now, and delivery across the platform got faster."
+      },
+      {
+        "number": "02",
+        "client": "A logistics company",
+        "title": "Enterprise supply chain platform",
+        "challenge": "Make operational data legible across the business.",
+        "approach": "A platform combining data visualization, APIs and a modern frontend.",
+        "outcome": "Clearer visibility into supply chain risk and operational dependencies."
+      },
+      {
+        "number": "03",
+        "client": "A financial services company",
+        "title": "Commercial financing platform",
+        "challenge": "Simplify commercial financing workflows that had grown unwieldy.",
+        "approach": "One platform connecting data, APIs and the screens people actually work in, end to end.",
+        "outcome": "Fewer steps to get a deal through, on a platform that can grow."
+      }
+    ]
+  },
+  "technology": {
+    "eyebrow": "07 · Technology",
+    "heading": "A snapshot, not a limit.",
+    "subheading": "We work across the modern stack. This is what we reach for most, not the limit of what we can do.",
+    "items": [
+      { "term": "Frontend", "description": "React · Next.js · Angular · TypeScript" },
+      { "term": "Backend", "description": "Node.js · Python · APIs · GraphQL" },
+      { "term": "Cloud & Platform", "description": "AWS · Azure · Cloud infrastructure · CI/CD" },
+      { "term": "Data", "description": "PostgreSQL · MongoDB · Data pipelines" },
+      { "term": "AI", "description": "AI integration · Intelligent workflows · Automation" }
+    ],
+    "closingLine": "We choose technology based on the problem, not the other way around."
+  },
+  "about": {
+    "eyebrow": "08 · About",
+    "heading": "Built by engineers who have spent years building systems that businesses depend on.",
+    "paragraphs": [
+      "Univarq Technologies is a small engineering practice that takes direct ownership of the hard technical work across the full stack, from architecture to application, data and cloud. Every engagement runs as a build, an embed or a modernization, agreed before the work starts.",
+      "You work with the engineers directly. There's no account manager between the problem and the people solving it and no handoff from a sales layer to a delivery layer. The engineers who scope an engagement build it and stay involved through production."
+    ],
+    "linkedinLabel": "Univarq on LinkedIn →",
+    "linkedinUrl": "https://www.linkedin.com/company/univarq/",
+    "email": "info@univarq.io"
+  },
+  "faq": {
+    "eyebrow": "09 · Questions",
+    "heading": "Before you get in touch.",
+    "items": [
+      {
+        "question": "How do you price engagements?",
+        "answer": "Most work is scoped one of two ways. Either a fixed-scope project with a defined path to production, or an ongoing monthly engagement. Which one fits depends on the problem, so that's usually the first thing we work out on a call, not something we quote blind."
+      },
+      {
+        "question": "Do you work with startups, or only larger companies?",
+        "answer": "Both. The real question is which engagement fits. A Build we own outright, or an Embed where we work inside your team."
+      },
+      {
+        "question": "Can you augment an existing in-house team?",
+        "answer": "Yes. That's the Embed model. We work inside your engineering organization on the problems your team doesn't have capacity to own."
+      },
+      {
+        "question": "Do you support what you build after launch?",
+        "answer": "Yes, where it makes sense. Some engagements end with a clean handoff; others continue as ongoing support or improvement work. We agree on which one up front, not after we ship."
+      },
+      {
+        "question": "What's a typical engagement length?",
+        "answer": "It depends on the problem. A focused build might run a few months; an embedded or ongoing engagement can run much longer. If you're not sure yet what you need, a short diagnostic engagement is usually the better place to start."
+      }
+    ]
+  },
+  "contact": {
+    "eyebrow": "10 · Contact",
+    "heading": "Tell us what you're trying to build.",
+    "body": "Tell us what you're building and your rough timeline. An engineer reads every message, so the reply comes from whoever would actually do the work.",
+    "email": "info@univarq.io",
+    "successHeading": "Message received.",
+    "responseNote": "We respond within one business day. No sales sequence."
+  },
+  "footer": {
+    "tagline": "Engineering the systems businesses depend on.",
+    "servicesHeading": "Services",
+    "services": ["Software Engineering", "Cloud & Platform", "Data & AI", "System Integration", "Modernization", "Engineering Teams"],
+    "companyHeading": "Company",
+    "companyLinks": [
+      { "href": "#about", "label": "About" },
+      { "href": "#case-studies", "label": "Case Studies" },
+      { "href": "#solutions", "label": "Solutions" },
+      { "href": "#contact", "label": "Contact" }
+    ],
+    "connectHeading": "Connect",
+    "linkedinUrl": "https://www.linkedin.com/company/univarq/",
+    "email": "info@univarq.io",
+    "legalLine": "Build · Embed · Modernize"
+  },
+  "site": {
+    "ctaLabel": "Tell us what you're trying to build",
+    "showIndustries": true,
+    "showFaq": true
+  }
+}

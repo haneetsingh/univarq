@@ -132,7 +132,8 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
         error={errors.name}
         onBlur={handleBlur}
         onChange={() => handleChange("name")}
-        placeholder="John Doe"
+        placeholder="Your name"
+        autoComplete="name"
       />
 
       <Field
@@ -146,6 +147,7 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
         onBlur={handleBlur}
         onChange={() => handleChange("email")}
         placeholder="you@company.com"
+        autoComplete="email"
       />
 
       <Field
@@ -155,13 +157,14 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
         labelSuffix={
           <span
             className="normal-case tracking-normal text-[12.5px]"
-            style={{ fontFamily: "var(--font-body)", color: "var(--color-placeholder)" }}
+            style={{ fontFamily: "var(--font-body)", color: "var(--color-faint)" }}
           >
             optional
           </span>
         }
         disabled={submitting}
-        placeholder="Where you work"
+        placeholder="Company name"
+        autoComplete="organization"
       />
 
       <MessageField

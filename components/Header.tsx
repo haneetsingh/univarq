@@ -1,126 +1,115 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Mark } from "./Mark";
+import content from "@/content/homepage.json";
+
+const { site } = content;
 
 const NAV_LINKS = [
+  { href: "#home", label: "Home" },
+  { href: "#services", label: "Services" },
+  { href: "#solutions", label: "Solutions" },
+  { href: "#case-studies", label: "Case Studies" },
   { href: "#about", label: "About" },
-  { href: "#why", label: "Why Univarq" },
-  { href: "#services", label: "What We Do" },
+  { href: "#contact", label: "Contact" },
 ];
-
-const NAV_IDS = new Set(NAV_LINKS.map((link) => link.href.slice(1)));
 
 export function Header() {
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [inContact, setInContact] = useState(false);
+  const sectionsRef = useRef<HTMLElement[]>([]);
 
   useEffect(() => {
-    // Include #contact so leaving the last nav section clears the highlight.
-    const allSectionIds = [...NAV_IDS, "contact"];
-    const sections = allSectionIds
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
+    sectionsRef.current = NAV_LINKS.map((link) =>
+      document.getElementById(link.href.slice(1))
+    ).filter((el): el is HTMLElement => el !== null);
 
-    // Track intersection state persistently — a click-triggered jump can
-    // land inside a section without it ever appearing in a callback batch.
-    const intersecting = new Map<string, DOMRectReadOnly>();
+    function recompute() {
+      const sections = sectionsRef.current;
+      if (sections.length === 0) return;
 
-    function recomputeActive() {
-      const topSection = [...intersecting.entries()].sort(
-        (a, b) => a[1].top - b[1].top
-      )[0]?.[0];
-      setInContact(topSection === "contact");
-      setActiveId(topSection && NAV_IDS.has(topSection) ? topSection : null);
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.scrollHeight - 4
+      ) {
+        setActiveId(sections[sections.length - 1].id);
+        return;
+      }
+
+      const threshold = window.innerHeight * 0.35;
+      let current: string | null = null;
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= threshold) {
+          current = section.id;
+        }
+      }
+      setActiveId(current);
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            intersecting.set(entry.target.id, entry.boundingClientRect);
-          } else {
-            intersecting.delete(entry.target.id);
-          }
-        }
-        recomputeActive();
-      },
-      { rootMargin: "-20% 0px -70% 0px", threshold: 0 }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+    recompute();
+    window.addEventListener("scroll", recompute, { passive: true });
+    window.addEventListener("resize", recompute);
+    return () => {
+      window.removeEventListener("scroll", recompute);
+      window.removeEventListener("resize", recompute);
+    };
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-rule bg-ink/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 sm:px-8">
-        <Link
-          href="#top"
-          className="flex items-center gap-3 rounded-sm"
-          style={{ gap: "0.37em" }}
-        >
-          <Mark size={32} />
-          <span
-            className="font-display font-semibold"
-            style={{ fontSize: 22, letterSpacing: "-0.035em", lineHeight: 1 }}
+    <>
+      <a
+        href="#main"
+        className="fixed left-[-9999px] top-3 z-100 bg-brass px-4 py-2 font-label text-[12px] text-ink focus:left-3"
+      >
+        Skip to content
+      </a>
+      <header className="sticky top-0 z-50 border-b border-rule bg-ink/92 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-3 px-6 py-4 sm:px-8">
+          <Link
+            href="#home"
+            aria-label="Univarq home"
+            className="flex items-center gap-2.5"
           >
-            Univarq
-          </span>
-        </Link>
+            <Mark size={29} />
+            <span
+              className="font-display font-semibold text-paper"
+              style={{ fontSize: 24, letterSpacing: "-0.035em", lineHeight: 1 }}
+            >
+              Univarq
+            </span>
+          </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-10 sm:flex">
-          {NAV_LINKS.map((link) => {
-            const isActive = activeId === link.href.slice(1);
-            return (
-              <a
-                key={link.href}
-                href={link.href}
-                aria-current={isActive ? "true" : undefined}
-                className="label"
-                style={{
-                  color: isActive ? "var(--color-brass)" : "var(--color-grey)",
-                  transition: "color 150ms ease",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) e.currentTarget.style.color = "var(--color-paper)";
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) e.currentTarget.style.color = "var(--color-grey)";
-                }}
-              >
-                {link.label}
-              </a>
-            );
-          })}
-        </nav>
-
-        <a
-          href="#contact"
-          aria-current={inContact ? "true" : undefined}
-          className="label border px-4 py-2 transition-colors"
-          style={{
-            borderColor: inContact ? "var(--color-brass)" : "var(--color-rule-strong)",
-            background: inContact ? "var(--color-slate)" : "transparent",
-            color: inContact ? "var(--color-brass)" : "var(--color-paper)",
-          }}
-          onMouseEnter={(e) => {
-            if (!inContact) {
-              e.currentTarget.style.borderColor = "var(--color-brass)";
-              e.currentTarget.style.color = "var(--color-brass)";
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!inContact) {
-              e.currentTarget.style.borderColor = "var(--color-rule-strong)";
-              e.currentTarget.style.color = "var(--color-paper)";
-            }
-          }}
-        >
-          Start a conversation
-        </a>
-      </div>
-    </header>
+          <nav
+            aria-label="Primary"
+            className="ml-auto flex flex-wrap items-center justify-end gap-x-6 gap-y-3.5"
+          >
+            {NAV_LINKS.map((link) => {
+              const isActive = activeId === link.href.slice(1);
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isActive ? "true" : undefined}
+                  className="border-b pb-1.25 font-body text-sm transition-colors"
+                  style={{
+                    color: isActive ? "var(--color-paper)" : "var(--color-grey)",
+                    borderBottomColor: isActive ? "var(--color-brass)" : "transparent",
+                  }}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
+            <a
+              href="#contact"
+              className="shrink-0 bg-brass px-4.5 py-3.5 font-body text-[13.5px] font-medium text-ink transition-colors hover:bg-brass-hover"
+            >
+              {site.ctaLabel}
+            </a>
+          </nav>
+        </div>
+      </header>
+    </>
   );
 }

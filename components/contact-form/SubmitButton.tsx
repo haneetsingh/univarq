@@ -1,16 +1,17 @@
-import { ClockIcon } from "../icons/ClockIcon";
 import { Spinner } from "../icons/Spinner";
+import content from "@/content/homepage.json";
+
+const { site, contact } = content;
 
 export function SubmitButton({ submitting }: { submitting: boolean }) {
   return (
-    <div className="flex flex-col gap-4 pt-1">
+    <div className="flex flex-col gap-3.5 pt-1">
       <button
         type="submit"
         disabled={submitting}
-        className="flex w-fit items-center gap-2.75 text-[16px] font-medium text-ink disabled:cursor-not-allowed"
+        className="flex w-full items-center justify-center gap-2.75 text-[15px] font-medium text-ink disabled:cursor-not-allowed"
         style={{
           background: submitting ? "#8f6730" : "var(--color-brass)",
-          padding: "17px 34px",
           minHeight: 52,
         }}
         onMouseEnter={(e) => {
@@ -21,12 +22,11 @@ export function SubmitButton({ submitting }: { submitting: boolean }) {
         }}
       >
         {submitting && <Spinner />}
-        {submitting ? "Sending…" : "Send"}
+        {submitting ? "Sending…" : site.ctaLabel}
       </button>
-      <div className="flex items-center gap-2.25 text-[13.5px] text-grey">
-        <ClockIcon />
-        <span>We reply within one business day. No sales sequence.</span>
-      </div>
+      <p className="text-[14px]" style={{ color: "var(--color-faint)" }}>
+        {contact.responseNote}
+      </p>
     </div>
   );
 }

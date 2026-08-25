@@ -1,41 +1,77 @@
+import content from "@/content/homepage.json";
+
+const { hero } = content;
+
 export function Hero() {
   return (
     <section
-      id="top"
-      className="mx-auto flex max-w-6xl flex-col gap-8 px-6 pb-24 pt-20 sm:px-8 sm:pb-32 sm:pt-28"
+      id="home"
+      className="mx-auto grid max-w-6xl gap-9 px-6 pb-12 pt-14 sm:px-8 sm:pb-22 sm:pt-29"
+      style={{ gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))" }}
     >
-      <p className="label text-brass">One team. Every layer of the stack.</p>
-      <h1
-        className="max-w-3xl font-display font-semibold text-paper"
-        style={{ fontSize: "clamp(2.5rem, 5vw, 4.25rem)", letterSpacing: "-0.03em" }}
-      >
-        We build the software your business actually runs on.
-      </h1>
-      <p className="max-w-[62ch] text-body" style={{ textWrap: "pretty" }}>
-        Univarq takes ownership of technology problems from first sketch to
-        production, whether that&rsquo;s frontend, backend, cloud, data or
-        AI. We understand what you&rsquo;re trying to do, take it on as our
-        own and we deliver it.
-      </p>
-      <div className="flex flex-wrap items-center gap-8 pt-2">
-        <a
-          href="#contact"
-          className="border border-brass bg-brass px-6 py-3 text-sm font-medium text-ink transition-colors hover:bg-brass-hover hover:border-brass-hover"
+      <div>
+        <p className="label mb-7 text-brass">{hero.eyebrow}</p>
+        <h1
+          className="max-w-[19ch] font-display font-semibold text-paper"
+          style={{
+            fontSize: "clamp(2.5rem, 5.6vw, 4.5rem)",
+            lineHeight: 1.04,
+            letterSpacing: "-0.035em",
+          }}
         >
-          Start a conversation
-        </a>
-        <a
-          href="#services"
-          className="group flex items-center gap-2 text-sm font-medium text-body transition-colors hover:text-paper"
-        >
-          See what we do
-          <span
-            aria-hidden="true"
-            className="text-brass transition-transform group-hover:translate-x-1"
+          {hero.heading}
+        </h1>
+        <p className="mt-7.5 max-w-[54ch] text-body" style={{ fontSize: "clamp(17px, 1.5vw, 20px)", lineHeight: 1.65, fontWeight: 300 }}>
+          {hero.lede}
+        </p>
+        <div className="mt-10.5 flex flex-wrap items-center gap-3.5">
+          <a
+            href="#contact"
+            className="bg-brass px-6.5 py-4.5 text-sm font-medium text-ink transition-colors hover:bg-brass-hover"
           >
-            &rarr;
-          </span>
-        </a>
+            {hero.primaryCta}
+          </a>
+          <a
+            href="#case-studies"
+            className="border border-rule-strong px-6.5 py-4.5 text-sm font-medium text-paper transition-colors hover:border-brass"
+          >
+            {hero.secondaryCta}
+          </a>
+        </div>
+      </div>
+
+      <div className="border border-rule bg-slate p-7 sm:p-8.5">
+        <p className="label mb-5.5 text-grey">{hero.engagementModelsHeading}</p>
+        <div>
+          {hero.engagementModels.map((model, i) => (
+            <div
+              key={model.number}
+              className="grid grid-cols-[28px_1fr] gap-3.5 py-4.5"
+              style={{
+                borderBottom:
+                  i < hero.engagementModels.length - 1 ? "1px solid var(--color-rule)" : "none",
+              }}
+            >
+              <span className="font-label text-[13px]" style={{ color: "var(--color-blueprint)" }}>
+                {model.number}
+              </span>
+              <div>
+                <p
+                  className="font-display text-paper"
+                  style={{ fontSize: 20, fontWeight: 500, letterSpacing: "-0.02em" }}
+                >
+                  {model.title}
+                </p>
+                <p className="mt-1 text-grey" style={{ fontSize: "14.5px", fontWeight: 300 }}>
+                  {model.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-5.5 border-t border-rule pt-5.5 text-grey" style={{ fontSize: "13.5px", fontWeight: 300 }}>
+          {hero.footnote}
+        </p>
       </div>
     </section>
   );
