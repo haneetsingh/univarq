@@ -4,6 +4,7 @@ import { Positioning } from "@/components/Positioning";
 import { About } from "@/components/About";
 import { WhyUnivarq } from "@/components/WhyUnivarq";
 import { Services } from "@/components/Services";
+import { Solutions } from "@/components/Solutions";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 
@@ -15,6 +16,7 @@ export default function Home() {
         <Hero />
         <Positioning />
         <Services />
+        <Solutions />
         <WhyUnivarq />
         <About />
         <Contact />
