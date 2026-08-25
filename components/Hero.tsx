@@ -1,4 +1,5 @@
 import content from "@/content/homepage.json";
+import { Button } from "./Button";
 
 const { hero } = content;
 
@@ -25,18 +26,12 @@ export function Hero() {
           {hero.lede}
         </p>
         <div className="mt-10.5 flex flex-wrap items-center gap-3.5">
-          <a
-            href="#contact"
-            className="bg-brass px-6.5 py-4.5 text-sm font-medium text-ink transition-colors hover:bg-brass-hover"
-          >
+          <Button as="a" href="#contact">
             {hero.primaryCta}
-          </a>
-          <a
-            href="#case-studies"
-            className="border border-rule-strong px-6.5 py-4.5 text-sm font-medium text-paper transition-colors hover:border-brass"
-          >
+          </Button>
+          <Button as="a" href="#case-studies" variant="secondary">
             {hero.secondaryCta}
-          </a>
+          </Button>
         </div>
       </div>
 

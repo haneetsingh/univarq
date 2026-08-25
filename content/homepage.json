@@ -208,7 +208,8 @@
     "legalLine": "Build · Embed · Modernize"
   },
   "site": {
-    "ctaLabel": "Tell us what you're trying to build",
+    "ctaLabel": "Get in touch",
+    "formCta": "Tell us what you're trying to build",
     "showIndustries": true,
     "showFaq": true
   }
