@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 const RESEND_API_URL = "https://api.resend.com/emails";
 const FROM_ADDRESS = "Univarq <info@univarq.io>";
@@ -110,6 +111,19 @@ export async function POST(request: Request) {
     console.error("Failed to send contact form emails", error);
     return NextResponse.json({ error: "Failed to send" }, { status: 502 });
   }
+
+  const distinctId = request.headers.get("x-posthog-distinct-id") ?? reference;
+  const posthog = getPostHogClient();
+  posthog.capture({
+    distinctId,
+    event: "contact_received",
+    properties: {
+      has_company: Boolean(companyName),
+      message_length: message.length,
+      reference,
+    },
+  });
+  await posthog.flush();
 
   return NextResponse.json({ ok: true });
 }

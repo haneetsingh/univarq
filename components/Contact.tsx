@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import posthog from "posthog-js";
 import { Mark } from "./Mark";
 import { ContactForm } from "./ContactForm";
 import type { SuccessInfo } from "./contact-form/utils";
@@ -41,6 +42,7 @@ export function Contact() {
               Or email{" "}
               <a
                 href={`mailto:${contact.email}`}
+                onClick={() => posthog.capture("outbound_link_clicked", { destination: "email", location: "contact" })}
                 className="text-brass transition-colors hover:text-brass-hover"
               >
                 {contact.email}

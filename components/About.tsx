@@ -1,3 +1,6 @@
+"use client";
+
+import posthog from "posthog-js";
 import content from "@/content/homepage.json";
 
 const { about } = content;
@@ -30,6 +33,7 @@ export function About() {
             href={about.linkedinUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => posthog.capture("outbound_link_clicked", { destination: "linkedin", location: "about" })}
             className="border-b pb-1 text-brass transition-colors hover:text-brass-hover"
             style={{ borderBottomColor: "rgba(192,138,62,.45)" }}
           >
@@ -37,6 +41,7 @@ export function About() {
           </a>
           <a
             href={`mailto:${about.email}`}
+            onClick={() => posthog.capture("outbound_link_clicked", { destination: "email", location: "about" })}
             className="border-b pb-1 text-brass transition-colors hover:text-brass-hover"
             style={{ borderBottomColor: "rgba(192,138,62,.45)" }}
           >

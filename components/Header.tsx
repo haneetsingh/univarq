@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import posthog from "posthog-js";
 import { Mark } from "./Mark";
 import { MobileMenu } from "./MobileMenu";
 import { Button } from "./Button";
@@ -105,7 +106,11 @@ export function Header() {
               className="ml-auto"
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
-              onClick={() => setMenuOpen((open) => !open)}
+              onClick={() => {
+                const opening = !menuOpen;
+                setMenuOpen(opening);
+                if (opening) posthog.capture("mobile_menu_opened");
+              }}
               icon={
                 <span className="flex flex-col gap-1.5">
                   <span className="block h-[1.5px] w-5 bg-paper" />
@@ -138,7 +143,13 @@ export function Header() {
                   </a>
                 );
               })}
-              <Button as="a" href="#contact" size="sm" className="font-body">
+              <Button
+                as="a"
+                href="#contact"
+                size="sm"
+                className="font-body"
+                onClick={() => posthog.capture("cta_clicked", { label: site.ctaLabel, position: "header" })}
+              >
                 {site.ctaLabel}
               </Button>
             </nav>

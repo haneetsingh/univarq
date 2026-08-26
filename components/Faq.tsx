@@ -1,3 +1,6 @@
+"use client";
+
+import posthog from "posthog-js";
 import content from "@/content/homepage.json";
 
 const { faq } = content;
@@ -27,6 +30,14 @@ export function Faq() {
               className="group py-5"
               style={{
                 borderBottom: i < faq.items.length - 1 ? "1px solid var(--color-rule)" : "none",
+              }}
+              onToggle={(e) => {
+                if ((e.currentTarget as HTMLDetailsElement).open) {
+                  posthog.capture("faq_item_expanded", {
+                    question: item.question,
+                    index: i,
+                  });
+                }
               }}
             >
               <summary

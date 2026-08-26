@@ -1,3 +1,6 @@
+"use client";
+
+import posthog from "posthog-js";
 import { Mark } from "./Mark";
 import content from "@/content/homepage.json";
 
@@ -22,6 +25,7 @@ export function Footer() {
           </p>
           <a
             href="#contact"
+            onClick={() => posthog.capture("cta_clicked", { label: site.ctaLabel, position: "footer" })}
             className="w-fit border-b text-brass transition-colors hover:text-brass-hover"
             style={{ borderBottomColor: "rgba(192,138,62,.45)" }}
           >
@@ -51,6 +55,7 @@ export function Footer() {
                 <li key={link.href}>
                   <a
                     href={link.href}
+                    onClick={() => posthog.capture("footer_link_clicked", { label: link.label, href: link.href })}
                     className="text-body transition-colors hover:text-paper"
                     style={{ fontSize: 15, fontWeight: 300 }}
                   >
@@ -69,6 +74,7 @@ export function Footer() {
                   href={footer.linkedinUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => posthog.capture("outbound_link_clicked", { destination: "linkedin", location: "footer" })}
                   className="text-body transition-colors hover:text-paper"
                   style={{ fontSize: 15, fontWeight: 300 }}
                 >
@@ -78,6 +84,7 @@ export function Footer() {
               <li>
                 <a
                   href={`mailto:${footer.email}`}
+                  onClick={() => posthog.capture("outbound_link_clicked", { destination: "email", location: "footer" })}
                   className="text-body transition-colors hover:text-paper"
                   style={{ fontSize: 15, fontWeight: 300 }}
                 >

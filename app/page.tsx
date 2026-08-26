@@ -21,34 +21,34 @@ export default function Home() {
       <main id="main" className="flex-1">
         <Hero />
         <Positioning />
-        <Reveal>
+        <Reveal sectionName="services">
           <Services />
         </Reveal>
-        <Reveal>
+        <Reveal sectionName="solutions">
           <Solutions />
         </Reveal>
-        <Reveal>
+        <Reveal sectionName="why_univarq">
           <WhyUnivarq />
         </Reveal>
-        <Reveal>
+        <Reveal sectionName="how_we_work">
           <HowWeWork />
         </Reveal>
-        <Reveal>
+        <Reveal sectionName="industries">
           <Industries />
         </Reveal>
-        <Reveal>
+        <Reveal sectionName="case_studies">
           <CaseStudies />
         </Reveal>
-        <Reveal>
+        <Reveal sectionName="technology">
           <Technology />
         </Reveal>
-        <Reveal>
+        <Reveal sectionName="about">
           <About />
         </Reveal>
-        <Reveal>
+        <Reveal sectionName="faq">
           <Faq />
         </Reveal>
-        <Reveal>
+        <Reveal sectionName="contact">
           <Contact />
         </Reveal>
       </main>
