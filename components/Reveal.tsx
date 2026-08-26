@@ -1,8 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import posthog from "posthog-js";
 
-export function Reveal({ children }: { children: ReactNode }) {
+export function Reveal({
+  children,
+  sectionName,
+}: {
+  children: ReactNode;
+  sectionName: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const [hidden, setHidden] = useState(false);
 
@@ -10,33 +17,45 @@ export function Reveal({ children }: { children: ReactNode }) {
     const el = ref.current;
     if (!el) return;
 
+    const viewObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          posthog.capture("section_viewed", { section: sectionName });
+          viewObserver.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    viewObserver.observe(el);
+
     if (
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
       el.getBoundingClientRect().top <= window.innerHeight * 0.9
     ) {
-      return;
+      return () => viewObserver.disconnect();
     }
 
     setHidden(true);
 
-    const observer = new IntersectionObserver(
+    const revealObserver = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setHidden(false);
-          observer.unobserve(el);
+          revealObserver.unobserve(el);
         }
       },
       { rootMargin: "0px 0px -8% 0px" }
     );
-    observer.observe(el);
+    revealObserver.observe(el);
 
     const fallback = setTimeout(() => setHidden(false), 6000);
 
     return () => {
-      observer.disconnect();
+      viewObserver.disconnect();
+      revealObserver.disconnect();
       clearTimeout(fallback);
     };
-  }, []);
+  }, [sectionName]);
 
   return (
     <div

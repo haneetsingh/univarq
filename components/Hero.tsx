@@ -1,3 +1,6 @@
+"use client";
+
+import posthog from "posthog-js";
 import content from "@/content/homepage.json";
 import { Button } from "./Button";
 
@@ -26,10 +29,19 @@ export function Hero() {
           {hero.lede}
         </p>
         <div className="mt-10.5 flex flex-wrap items-center gap-3.5">
-          <Button as="a" href="#contact">
+          <Button
+            as="a"
+            href="#contact"
+            onClick={() => posthog.capture("cta_clicked", { label: hero.primaryCta, position: "hero_primary" })}
+          >
             {hero.primaryCta}
           </Button>
-          <Button as="a" href="#case-studies" variant="secondary">
+          <Button
+            as="a"
+            href="#case-studies"
+            variant="secondary"
+            onClick={() => posthog.capture("cta_clicked", { label: hero.secondaryCta, position: "hero_secondary" })}
+          >
             {hero.secondaryCta}
           </Button>
         </div>
