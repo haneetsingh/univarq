@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FocusEvent, type FormEvent } from "react";
+import posthog from "posthog-js";
 import { Field } from "./contact-form/Field";
 import { MessageField } from "./contact-form/MessageField";
 import { ErrorBanner } from "./contact-form/ErrorBanner";
@@ -85,7 +86,11 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-POSTHOG-DISTINCT-ID": posthog.get_distinct_id() ?? "",
+          "X-POSTHOG-SESSION-ID": posthog.get_session_id() ?? "",
+        },
         body: JSON.stringify({ name, email, companyName, message, reference }),
       });
 
@@ -95,9 +100,18 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
       setStatus("success");
       form.reset();
       setMessageLength(0);
-    } catch {
+      posthog.capture("contact_form_submitted", {
+        has_company: Boolean(companyName),
+        message_length: message.length,
+        reference,
+      });
+    } catch (err) {
       setStatus("error");
       setNetworkError(true);
+      posthog.captureException(err);
+      posthog.capture("contact_form_error", {
+        reference,
+      });
     }
   }
 
