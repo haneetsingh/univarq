@@ -39,7 +39,7 @@ export function Contact() {
               <a
                 href={`mailto:${CONTACT_ADDRESS}`}
                 onClick={() => posthog.capture("outbound_link_clicked", { destination: "email", location: "contact" })}
-                className="text-brass transition-colors hover:text-brass-hover"
+                className="link-brass"
               >
                 {CONTACT_ADDRESS}
               </a>
@@ -63,13 +63,22 @@ export function Contact() {
                 </h3>
                 <p className="type-card-body mt-2 text-body">
                   Thanks, {firstNameOf(success.name)}. Your message is on its way
-                  and a copy has been sent to{" "}
-                  <span className="text-paper">{success.email}</span>
+                  {success.confirmationSent ? (
+                    <>
+                      {" "}
+                      and a copy has been sent to{" "}
+                      <span className="text-paper">{success.email}</span>
+                    </>
+                  ) : (
+                    "."
+                  )}
                 </p>
               </div>
-              <p className="font-label text-[12px] font-normal tracking-[0.1em] text-grey">
-                REFERENCE {success.reference}
-              </p>
+              {success.reference && (
+                <p className="font-label text-[12px] font-normal tracking-[0.1em] text-grey">
+                  REFERENCE {success.reference}
+                </p>
+              )}
             </div>
           ) : (
             <ContactForm onSuccess={setSuccess} />

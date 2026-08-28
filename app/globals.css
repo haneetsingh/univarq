@@ -75,7 +75,11 @@
   }
 
   a {
-    color: inherit;
+    color: var(--color-brass);
+  }
+
+  a:hover {
+    color: var(--color-brass-hover);
   }
 
   section[id] {
@@ -83,7 +87,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-focus);
+    outline: 2px solid var(--color-paper);
     outline-offset: 2px;
   }
 }
@@ -102,5 +106,15 @@
   }
   .type-card-body {
     @apply text-[16.5px] font-light leading-[1.7];
+  }
+
+  /* Inline link: brass with a bottom rule. */
+  .link-brass {
+    @apply text-brass border-b border-b-brass/45 pb-1 transition-colors hover:text-brass-hover;
+  }
+
+  /* List/nav link: body text, paper on hover. */
+  .link-muted {
+    @apply text-body transition-colors hover:text-paper;
   }
 }

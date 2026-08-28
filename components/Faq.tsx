@@ -33,7 +33,7 @@ export function Faq() {
                 }
               }}
             >
-              <summary className="cursor-pointer list-none font-display text-[18px] font-medium text-paper">
+              <summary className="cursor-pointer list-none font-display text-[18px] font-medium text-paper transition-colors hover:text-brass [&::-webkit-details-marker]:hidden">
                 {item.question}
               </summary>
               <p className="mt-3.5 max-w-[62ch] text-[16px] font-light leading-[1.7] text-body">

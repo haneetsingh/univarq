@@ -8,13 +8,12 @@ export function getPostHogClient(): PostHog {
 
   if (!token) {
     if (process.env.NODE_ENV !== "production") {
-      throw new Error(
-        "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN variable required by PostHog is missing or un-configured, " +
-          "this causes events to be silently missed. " +
-          "This error stops appearing once NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN is configured"
+      console.warn(
+        "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN is missing or un-configured; " +
+          "server-side PostHog events will be dropped."
       );
     }
-    // In production, return a no-op stub so the app never crashes without a token.
+    // No-op stub so callers never crash without a token.
     return {
       capture: () => {},
       identify: () => {},

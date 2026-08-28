@@ -49,21 +49,12 @@ export function Field({
         aria-describedby={error ? `${id}-error` : undefined}
         onBlur={onBlur}
         onChange={onChange}
-        className="px-4 text-[15.5px] text-paper transition-colors disabled:opacity-55"
-        style={{
-          background: error ? "var(--color-error-field-bg)" : "var(--color-ink)",
-          border: `1px solid ${error ? "var(--color-error)" : "var(--color-input-border)"}`,
-          minHeight: 48,
-          outline: "none",
-        }}
-        onFocus={(e) => {
-          const ringColor = error ? "196,84,74" : "47,86,134";
-          e.currentTarget.style.borderColor = error ? "var(--color-error)" : "var(--color-focus)";
-          e.currentTarget.style.boxShadow = `0 0 0 2px rgba(${ringColor},0.35)`;
-        }}
-        onBlurCapture={(e) => {
-          e.currentTarget.style.boxShadow = "none";
-        }}
+        className="min-h-12 border border-input-border bg-ink px-4 text-[15.5px] text-paper
+          transition-colors outline-none
+          focus:border-focus focus:shadow-[0_0_0_2px_rgba(47,86,134,0.35)]
+          aria-invalid:border-error aria-invalid:bg-error-field-bg
+          aria-invalid:focus:shadow-[0_0_0_2px_rgba(196,84,74,0.35)]
+          disabled:opacity-55"
       />
       {error && <FieldError id={`${id}-error`}>{error}</FieldError>}
     </div>

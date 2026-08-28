@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 
 const SCRIPT_SRC =
   "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
-const SITE_KEY = "0x4AAAAAAEee2gBLsW8Y48Ut";
+const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 const ACTION = "contact";
+
+/** Whether the Turnstile widget is configured and should render. */
+export const turnstileEnabled = SITE_KEY.length > 0;
 
 type TurnstileApi = {
   render: (
@@ -55,14 +58,22 @@ type TurnstileProps = {
   onExpire?: () => void;
   /** Bump this to force a widget reset (e.g. after a failed submit). */
   resetKey?: number;
+  /** Focus target when the user submits without completing the check. */
+  ref?: RefObject<HTMLDivElement | null>;
 };
 
-export function Turnstile({ onVerify, onExpire, resetKey = 0 }: TurnstileProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+export function Turnstile({
+  onVerify,
+  onExpire,
+  resetKey = 0,
+  ref,
+}: TurnstileProps) {
+  const localRef = useRef<HTMLDivElement>(null);
+  const containerRef = ref ?? localRef;
   const widgetIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!turnstileEnabled || !containerRef.current) return;
     const container = containerRef.current;
     let cancelled = false;
 
@@ -99,5 +110,7 @@ export function Turnstile({ onVerify, onExpire, resetKey = 0 }: TurnstileProps) 
     }
   }, [resetKey]);
 
-  return <div ref={containerRef} className="min-h-16.25" />;
+  if (!turnstileEnabled) return null;
+
+  return <div ref={containerRef} tabIndex={-1} className="min-h-16.25 outline-none" />;
 }
