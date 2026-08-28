@@ -188,10 +188,7 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
         name="companyName"
         label="Company"
         labelSuffix={
-          <span
-            className="normal-case tracking-normal text-[12.5px]"
-            style={{ fontFamily: "var(--font-body)", color: "var(--color-faint)" }}
-          >
+          <span className="font-body text-[12.5px] normal-case tracking-normal text-faint">
             optional
           </span>
         }

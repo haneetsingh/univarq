@@ -21,12 +21,9 @@ export function MessageField({
     <div className="flex flex-col gap-2">
       <div className="flex items-baseline justify-between">
         <label htmlFor="message" className="label text-grey">
-          What are you trying to build? <span style={{ color: "var(--color-brass)" }}>*</span>
+          What are you trying to build? <span className="text-brass">*</span>
         </label>
-        <span
-          className="label"
-          style={{ color: error ? "var(--color-error)" : "var(--color-placeholder)" }}
-        >
+        <span className={`label ${error ? "text-error" : "text-placeholder"}`}>
           {messageLength} / {MESSAGE_MAX}
         </span>
       </div>
