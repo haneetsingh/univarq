@@ -2,6 +2,7 @@
 
 import posthog from "posthog-js";
 import { Mark } from "./Mark";
+import { CONTACT_ADDRESS } from "@/lib/email";
 import content from "@/content/homepage.json";
 
 const { footer, site } = content;
@@ -83,12 +84,12 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href={`mailto:${footer.email}`}
+                  href={`mailto:${CONTACT_ADDRESS}`}
                   onClick={() => posthog.capture("outbound_link_clicked", { destination: "email", location: "footer" })}
                   className="text-body transition-colors hover:text-paper"
                   style={{ fontSize: 15, fontWeight: 300 }}
                 >
-                  {footer.email}
+                  {CONTACT_ADDRESS}
                 </a>
               </li>
             </ul>
