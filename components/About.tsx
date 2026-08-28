@@ -1,6 +1,7 @@
 "use client";
 
 import posthog from "posthog-js";
+import { CONTACT_ADDRESS } from "@/lib/email";
 import content from "@/content/homepage.json";
 
 const { about } = content;
@@ -40,12 +41,12 @@ export function About() {
             {about.linkedinLabel}
           </a>
           <a
-            href={`mailto:${about.email}`}
+            href={`mailto:${CONTACT_ADDRESS}`}
             onClick={() => posthog.capture("outbound_link_clicked", { destination: "email", location: "about" })}
             className="border-b pb-1 text-brass transition-colors hover:text-brass-hover"
             style={{ borderBottomColor: "rgba(192,138,62,.45)" }}
           >
-            {about.email}
+            {CONTACT_ADDRESS}
           </a>
         </div>
       </div>

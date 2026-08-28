@@ -1,4 +1,5 @@
 import { ErrorIcon } from "../icons/ErrorIcon";
+import { CONTACT_ADDRESS } from "@/lib/email";
 
 type ErrorBannerProps = {
   networkError: boolean;
@@ -25,7 +26,7 @@ export function ErrorBanner({ networkError, invalidCount }: ErrorBannerProps) {
         <span className="text-[15px] font-medium text-paper">Nothing was sent.</span>
         <span className="text-[13.5px] leading-snug" style={{ color: "var(--color-error-summary)" }}>
           {networkError
-            ? "Your message is still here. Try again, or email info@univarq.io."
+            ? `Your message is still here. Try again, or email ${CONTACT_ADDRESS}.`
             : summaryText(invalidCount)}
         </span>
       </div>

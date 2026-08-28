@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { CONTACT_ADDRESS } from "@/lib/email";
 import content from "@/content/homepage.json";
 import "./globals.css";
 
@@ -74,11 +75,11 @@ const jsonLd = {
       image: "https://univarq.io/brand/og-univarq-1200x630.png",
       description:
         "Univarq takes ownership of complex technology initiatives. We come in as a build partner, an embedded team or a modernization partner, whichever the problem calls for.",
-      email: "info@univarq.io",
+      email: CONTACT_ADDRESS,
       sameAs: ["https://www.linkedin.com/company/univarq/"],
       contactPoint: {
         "@type": "ContactPoint",
-        email: "info@univarq.io",
+        email: CONTACT_ADDRESS,
         contactType: "sales",
         url: "https://univarq.io/#contact",
       },

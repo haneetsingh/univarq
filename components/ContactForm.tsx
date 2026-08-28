@@ -6,6 +6,7 @@ import { Field } from "./contact-form/Field";
 import { MessageField } from "./contact-form/MessageField";
 import { ErrorBanner } from "./contact-form/ErrorBanner";
 import { SubmitButton } from "./contact-form/SubmitButton";
+import { Turnstile } from "./contact-form/Turnstile";
 import {
   referenceId,
   validateField,
@@ -24,6 +25,8 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [messageLength, setMessageLength] = useState(0);
   const [networkError, setNetworkError] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
 
   function handleBlur(event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = event.currentTarget;
@@ -78,6 +81,12 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
       return;
     }
 
+    if (!turnstileToken) {
+      setStatus("error");
+      setNetworkError(true);
+      return;
+    }
+
     setStatus("submitting");
     setNetworkError(false);
 
@@ -91,7 +100,14 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
           "X-POSTHOG-DISTINCT-ID": posthog.get_distinct_id() ?? "",
           "X-POSTHOG-SESSION-ID": posthog.get_session_id() ?? "",
         },
-        body: JSON.stringify({ name, email, companyName, message, reference }),
+        body: JSON.stringify({
+          name,
+          email,
+          companyName,
+          message,
+          reference,
+          turnstileToken,
+        }),
       });
 
       if (!response.ok) throw new Error("Submission failed");
@@ -108,6 +124,9 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
     } catch (err) {
       setStatus("error");
       setNetworkError(true);
+      // Turnstile tokens are single-use; force a fresh challenge.
+      setTurnstileToken("");
+      setTurnstileResetKey((k) => k + 1);
       posthog.captureException(err);
       posthog.capture("contact_form_error", {
         reference,
@@ -190,6 +209,12 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
           setMessageLength(e.currentTarget.value.length);
           handleChange("message");
         }}
+      />
+
+      <Turnstile
+        onVerify={setTurnstileToken}
+        onExpire={() => setTurnstileToken("")}
+        resetKey={turnstileResetKey}
       />
 
       <SubmitButton submitting={submitting} />

@@ -1,8 +1,26 @@
 import { NextResponse } from "next/server";
 import { getPostHogClient } from "@/lib/posthog-server";
+import {
+  clientIp,
+  createRateLimiter,
+  escapeHtml,
+  firstNameOf,
+} from "@/lib/utils";
+import {
+  CONTACT_ADDRESS,
+  isEmailConfigured,
+  sendEmail,
+  type EmailPayload,
+} from "@/lib/email";
 
-const RESEND_API_URL = "https://api.resend.com/emails";
-const FROM_ADDRESS = "Univarq <info@univarq.io>";
+const MESSAGE_MAX = 1200;
+const MAX_BODY_BYTES = 16 * 1024;
+
+const rateLimit = createRateLimiter(5, 10 * 60 * 1000);
+
+const TURNSTILE_ACTION = "contact";
+const TURNSTILE_VERIFY_URL =
+  "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
 type ContactSubmission = {
   name?: string;
@@ -11,102 +29,147 @@ type ContactSubmission = {
   message?: string;
   reference?: string;
   honeypot?: string;
+  turnstileToken?: string;
 };
 
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
+// Verify a Cloudflare Turnstile token. Returns true when Turnstile is not
+// configured, so the form still works without it.
+async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
+  const secret = process.env.TURNSTILE_SECRET;
+  if (!secret) return true;
 
-async function sendEmail(apiKey: string, body: Record<string, unknown>) {
-  const response = await fetch(RESEND_API_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
+  const expectedHostnames = new Set(
+    (process.env.TURNSTILE_HOSTNAMES ?? "")
+      .split(",")
+      .map((h) => h.trim())
+      .filter(Boolean)
+  );
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Resend request failed (${response.status}): ${text}`);
+  if (!token || token.length > 2048 || expectedHostnames.size === 0) {
+    return false;
   }
+
+  let result: { success?: boolean; action?: string; hostname?: string };
+  try {
+    const res = await fetch(TURNSTILE_VERIFY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      signal: AbortSignal.timeout(10_000),
+      body: new URLSearchParams({ secret, response: token, remoteip: ip }),
+    });
+    if (!res.ok) throw new Error(`siteverify ${res.status}`);
+    result = await res.json();
+  } catch (err) {
+    console.error("Turnstile siteverify failed", err);
+    return false;
+  }
+
+  return (
+    result.success === true &&
+    result.action === TURNSTILE_ACTION &&
+    typeof result.hostname === "string" &&
+    expectedHostnames.has(result.hostname)
+  );
 }
 
 export async function POST(request: Request) {
+  const ip = clientIp(request);
+
+  if (!rateLimit(ip)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
+  const raw = await request.text();
+  if (raw.length > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: "Payload too large" }, { status: 413 });
+  }
+
   let data: ContactSubmission;
   try {
-    data = await request.json();
+    data = JSON.parse(raw);
   } catch {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
 
   if (data.honeypot) {
-    // Spam caught by the honeypot; report success without sending anything.
+    // Honeypot tripped; fake success, send nothing.
     return NextResponse.json({ ok: true });
+  }
+
+  const passedTurnstile = await verifyTurnstile(
+    (data.turnstileToken ?? "").trim(),
+    ip
+  );
+  if (!passedTurnstile) {
+    return NextResponse.json({ error: "Verification failed" }, { status: 403 });
   }
 
   const name = (data.name ?? "").trim();
   const email = (data.email ?? "").trim();
   const companyName = (data.companyName ?? "").trim();
-  const message = (data.message ?? "").trim();
+  const rawMessage = (data.message ?? "").trim();
+  const message =
+    rawMessage.length > MESSAGE_MAX ? rawMessage.slice(0, MESSAGE_MAX) : rawMessage;
   const reference = (data.reference ?? "").trim();
 
   if (!name || !email || !message) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
+  if (!isEmailConfigured()) {
     console.error("RESEND_API_KEY is not set; cannot send contact form emails.");
     return NextResponse.json({ error: "Email not configured" }, { status: 500 });
   }
 
-  const firstName = name.split(" ")[0];
+  const firstName = firstNameOf(name);
+  const escapedMessage = escapeHtml(message);
+  const referenceLine = reference ? `Reference: ${reference}` : "";
+
+  // Internal notification email to the Univarq inbox.
+  const notification: EmailPayload = {
+    to: CONTACT_ADDRESS,
+    reply_to: email,
+    subject: `New enquiry from ${name}${companyName ? `, ${companyName}` : ""}`,
+    text: [
+      `${email}${companyName ? ` · ${companyName}` : ""}`,
+      "",
+      message,
+      referenceLine ? `\n${referenceLine}` : null,
+    ]
+      .filter((line) => line !== null)
+      .join("\n"),
+  };
+
+  // Confirmation copy back to the sender.
+  const confirmation: EmailPayload = {
+    to: email,
+    subject: "Your message to Univarq",
+    headers: {
+      "Auto-Submitted": "auto-generated",
+      "X-Auto-Response-Suppress": "All",
+    },
+    html: `
+      <div style="display:none;max-height:0;overflow:hidden">A copy of what you sent us.</div>
+      <div style="font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;color:#0B0F14">
+        <p style="margin:0 0 16px">Hi ${escapeHtml(firstName)},</p>
+        <p style="margin:0 0 16px">Thanks for getting in touch. Your message is with us and a copy is below for your records.</p>
+        <blockquote style="border-left:2px solid #C08A3E;margin:0 0 16px;padding-left:16px;color:#4D5966">
+          ${
+            // Replacement must be a literal string, not a variable, or $&
+            // sequences in user input could corrupt the output.
+            escapedMessage.replace(/\n/g, "<br>")
+          }
+        </blockquote>
+        <p style="margin:0 0 16px">If you have anything to add, just reply to this email.</p>
+        ${referenceLine ? `<p style="margin:0 0 16px;color:#79838F;font-size:13px">${escapeHtml(referenceLine)}</p>` : ""}
+        <p style="margin:0">Univarq</p>
+      </div>
+    `,
+    text: `Hi ${firstName},\n\nThanks for getting in touch. Your message is with us and a copy is below for your records.\n\n${message}\n\nIf you have anything to add, just reply to this email.\n${referenceLine ? `\n${referenceLine}\n` : ""}\nUnivarq`,
+  };
 
   try {
-    await Promise.all([
-      // Internal notification.
-      sendEmail(apiKey, {
-        from: FROM_ADDRESS,
-        to: "info@univarq.io",
-        reply_to: email,
-        subject: reference
-          ? `New contact form submission from ${name} [${reference}]`
-          : `New contact form submission from ${name}`,
-        text: [
-          reference ? `Reference: ${reference}` : null,
-          `Name: ${name}`,
-          `Email: ${email}`,
-          companyName ? `Company: ${companyName}` : null,
-          "",
-          message,
-        ]
-          .filter(Boolean)
-          .join("\n"),
-      }),
-      // Confirmation copy back to the sender.
-      sendEmail(apiKey, {
-        from: FROM_ADDRESS,
-        to: email,
-        subject: "We got your message",
-        html: `
-          <p>Hi ${escapeHtml(firstName)},</p>
-          <p>Thanks for reaching out to Univarq. Here's a copy of what you sent us:</p>
-          <blockquote style="border-left:2px solid #c08a3e;margin:16px 0;padding-left:16px;color:#333;">
-            ${escapeHtml(message).replace(/\n/g, "<br>")}
-          </blockquote>
-          <p>We'll get back to you within one business day.</p>
-          ${reference ? `<p style="color:#79838f;font-size:13px;">Reference: ${escapeHtml(reference)}</p>` : ""}
-          <p>&mdash; Univarq</p>
-        `,
-        text: `Hi ${firstName},\n\nThanks for reaching out to Univarq. Here's a copy of what you sent us:\n\n${message}\n\nWe'll get back to you within one business day.\n${reference ? `\nReference: ${reference}\n` : ""}\n— Univarq`,
-      }),
-    ]);
+    await Promise.all([sendEmail(notification), sendEmail(confirmation)]);
   } catch (error) {
     console.error("Failed to send contact form emails", error);
     return NextResponse.json({ error: "Failed to send" }, { status: 502 });
