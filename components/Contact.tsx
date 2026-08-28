@@ -24,23 +24,17 @@ export function Contact() {
       id="contact"
       className="border-t border-rule px-6 pb-16 pt-14 sm:px-8 sm:pb-26 sm:pt-22"
     >
-      <div
-        className="mx-auto grid max-w-6xl gap-11"
-        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))" }}
-      >
+      <div className="mx-auto grid max-w-6xl grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-11">
         <div>
           <p className="label mb-4 text-brass">{contact.eyebrow}</p>
-          <h2
-            className="max-w-[18ch] font-display font-semibold text-paper"
-            style={{ fontSize: "clamp(30px, 4.2vw, 46px)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
-          >
+          <h2 className="type-h2 max-w-[18ch] text-paper">
             {contact.heading}
           </h2>
-          <p className="mt-6 max-w-[46ch] text-body" style={{ fontSize: 17, fontWeight: 300, lineHeight: 1.7 }}>
+          <p className="mt-6 max-w-[46ch] text-body">
             {contact.body}
           </p>
           <div className="mt-9 flex flex-col gap-3 border-t border-rule pt-6">
-            <p className="text-grey" style={{ fontSize: 15 }}>
+            <p className="text-[15px] text-grey">
               Email{" "}
               <a
                 href={`mailto:${CONTACT_ADDRESS}`}
@@ -54,36 +48,26 @@ export function Contact() {
         </div>
 
         <div
-          className="border p-7 sm:p-10"
-          style={
+          className={`border p-7 sm:p-10 ${
             success
-              ? {
-                  borderColor: "var(--color-success-border)",
-                  background: "var(--color-success-bg)",
-                }
-              : {
-                  borderColor: "var(--color-rule)",
-                  background: "var(--color-slate)",
-                }
-          }
+              ? "border-success-border bg-success-bg"
+              : "border-rule bg-slate"
+          }`}
         >
           {success ? (
             <div ref={successRef} tabIndex={-1} className="flex flex-col items-start gap-6 outline-none">
               <Mark size={40} keystoneColor="success" />
               <div>
-                <h3 className="font-display font-semibold text-paper" style={{ fontSize: 22 }}>
+                <h3 className="font-display text-[22px] font-semibold text-paper">
                   {contact.successHeading}
                 </h3>
-                <p className="mt-2 text-body" style={{ fontSize: "16.5px", fontWeight: 300, lineHeight: 1.7 }}>
+                <p className="type-card-body mt-2 text-body">
                   Thanks, {firstNameOf(success.name)}. Your message is on its way
                   and a copy has been sent to{" "}
                   <span className="text-paper">{success.email}</span>
                 </p>
               </div>
-              <p
-                className="font-label text-grey"
-                style={{ fontSize: 12, fontWeight: 400, letterSpacing: "0.1em" }}
-              >
+              <p className="font-label text-[12px] font-normal tracking-[0.1em] text-grey">
                 REFERENCE {success.reference}
               </p>
             </div>

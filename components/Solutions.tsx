@@ -9,14 +9,11 @@ export function Solutions() {
         <div className="grid items-end gap-6 sm:grid-cols-2">
           <div>
             <p className="label mb-4 text-brass">{solutions.eyebrow}</p>
-            <h2
-              className="font-display font-semibold text-paper"
-              style={{ fontSize: "clamp(30px, 4.2vw, 46px)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
-            >
+            <h2 className="type-h2 text-paper">
               {solutions.heading}
             </h2>
           </div>
-          <p className="text-grey" style={{ fontSize: 17, fontWeight: 300 }}>
+          <p className="text-grey">
             {solutions.subheading}
           </p>
         </div>
@@ -25,16 +22,12 @@ export function Solutions() {
           {solutions.items.map((item) => (
             <div
               key={item.term}
-              className="grid gap-2 border-b border-rule py-5.5"
-              style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", columnGap: 40 }}
+              className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-2 gap-x-10 border-b border-rule py-5.5"
             >
-              <dt
-                className="font-display text-paper"
-                style={{ fontSize: 20, fontWeight: 500, letterSpacing: "-0.02em" }}
-              >
+              <dt className="font-display text-[20px] font-medium tracking-[-0.02em] text-paper">
                 {item.term}
               </dt>
-              <dd className="text-body" style={{ fontSize: "16.5px", fontWeight: 300, lineHeight: 1.7 }}>
+              <dd className="type-card-body text-body">
                 {item.description}
               </dd>
             </div>
@@ -42,21 +35,17 @@ export function Solutions() {
         </dl>
 
         <div className="mt-14 grid gap-9 sm:grid-cols-2">
-          <h3
-            className="max-w-[18ch] font-display font-semibold text-paper"
-            style={{ fontSize: 26, letterSpacing: "-0.025em" }}
-          >
+          <h3 className="max-w-[18ch] font-display text-[26px] font-semibold tracking-[-0.025em] text-paper">
             {solutions.fitHeading}
           </h3>
           <ul className="flex flex-col gap-3.5">
             {solutions.fitItems.map((item) => (
-              <li key={item} className="grid gap-2" style={{ gridTemplateColumns: "20px 1fr" }}>
+              <li key={item} className="grid grid-cols-[20px_1fr] gap-2">
                 <span
                   aria-hidden="true"
-                  className="mt-2.25 h-1.75 w-1.75"
-                  style={{ background: "var(--color-blueprint)" }}
+                  className="mt-2.25 h-1.75 w-1.75 bg-blueprint"
                 />
-                <span className="text-body" style={{ fontSize: "16.5px", fontWeight: 300, lineHeight: 1.7 }}>
+                <span className="type-card-body text-body">
                   {item}
                 </span>
               </li>
@@ -64,10 +53,7 @@ export function Solutions() {
           </ul>
         </div>
 
-        <p
-          className="mt-6 font-display text-paper"
-          style={{ fontSize: 19, fontWeight: 400, letterSpacing: "-0.02em" }}
-        >
+        <p className="mt-6 font-display text-[19px] font-normal tracking-[-0.02em] text-paper">
           {solutions.closingLine}
         </p>
       </div>
