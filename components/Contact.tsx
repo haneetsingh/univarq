@@ -53,7 +53,20 @@ export function Contact() {
           </div>
         </div>
 
-        <div className="border border-rule bg-slate p-7 sm:p-10">
+        <div
+          className="border p-7 sm:p-10"
+          style={
+            success
+              ? {
+                  borderColor: "var(--color-success-border)",
+                  background: "var(--color-success-bg)",
+                }
+              : {
+                  borderColor: "var(--color-rule)",
+                  background: "var(--color-slate)",
+                }
+          }
+        >
           {success ? (
             <div ref={successRef} tabIndex={-1} className="flex flex-col items-start gap-6 outline-none">
               <Mark size={40} keystoneColor="success" />
@@ -67,6 +80,12 @@ export function Contact() {
                   <span className="text-paper">{success.email}</span>
                 </p>
               </div>
+              <p
+                className="font-label text-grey"
+                style={{ fontSize: 12, fontWeight: 400, letterSpacing: "0.1em" }}
+              >
+                REFERENCE {success.reference}
+              </p>
             </div>
           ) : (
             <ContactForm onSuccess={setSuccess} />
