@@ -23,12 +23,12 @@ export function CaseStudies() {
         >
           {caseStudies.items.map((study) => (
             <div
-              key={study.number}
+              key={study.model}
               className="grid content-start gap-6.5 border border-rule bg-ink p-7 sm:p-10"
             >
               <div>
-                <span className="font-label text-[13px] text-brass">{study.number}</span>
-                <p className="label mt-2.5 text-grey">{study.client}</p>
+                <span className="label text-brass">{study.model}</span>
+                <p className="label mt-2.5 text-grey">{study.sector}</p>
                 <h3
                   className="mt-2 font-display font-semibold text-paper"
                   style={{ fontSize: "clamp(24px, 2.4vw, 28px)", lineHeight: 1.2, letterSpacing: "-0.025em" }}

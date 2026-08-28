@@ -5,6 +5,8 @@ import posthog from "posthog-js";
 import { Mark } from "./Mark";
 import { ContactForm } from "./ContactForm";
 import type { SuccessInfo } from "./contact-form/utils";
+import { firstNameOf } from "@/lib/utils";
+import { CONTACT_ADDRESS } from "@/lib/email";
 import content from "@/content/homepage.json";
 
 const { contact } = content;
@@ -39,13 +41,13 @@ export function Contact() {
           </p>
           <div className="mt-9 flex flex-col gap-3 border-t border-rule pt-6">
             <p className="text-grey" style={{ fontSize: 15 }}>
-              Or email{" "}
+              Email{" "}
               <a
-                href={`mailto:${contact.email}`}
+                href={`mailto:${CONTACT_ADDRESS}`}
                 onClick={() => posthog.capture("outbound_link_clicked", { destination: "email", location: "contact" })}
                 className="text-brass transition-colors hover:text-brass-hover"
               >
-                {contact.email}
+                {CONTACT_ADDRESS}
               </a>
             </p>
           </div>
@@ -60,12 +62,11 @@ export function Contact() {
                   {contact.successHeading}
                 </h3>
                 <p className="mt-2 text-body" style={{ fontSize: "16.5px", fontWeight: 300, lineHeight: 1.7 }}>
-                  Thanks, {success.name.split(" ")[0]}. We sent a copy to{" "}
-                  <span className="text-paper">{success.email}</span> and
-                  will reply within one business day.
+                  Thanks, {firstNameOf(success.name)}. Your message is on its way
+                  and a copy has been sent to{" "}
+                  <span className="text-paper">{success.email}</span>
                 </p>
               </div>
-              <p className="font-label text-[11px] text-grey">REFERENCE {success.reference}</p>
             </div>
           ) : (
             <ContactForm onSuccess={setSuccess} />
