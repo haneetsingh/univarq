@@ -24,7 +24,7 @@ export function Footer() {
           <a
             href="#contact"
             onClick={() => posthog.capture("cta_clicked", { label: site.ctaLabel, position: "footer" })}
-            className="w-fit border-b border-b-[rgba(192,138,62,.45)] text-brass transition-colors hover:text-brass-hover"
+            className="link-brass w-fit"
           >
             {site.ctaLabel} &rarr;
           </a>
@@ -52,7 +52,7 @@ export function Footer() {
                   <a
                     href={link.href}
                     onClick={() => posthog.capture("footer_link_clicked", { label: link.label, href: link.href })}
-                    className="text-[15px] font-light text-body transition-colors hover:text-paper"
+                    className="link-muted text-[15px] font-light"
                   >
                     {link.label}
                   </a>
@@ -70,16 +70,17 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => posthog.capture("outbound_link_clicked", { destination: "linkedin", location: "footer" })}
-                  className="text-[15px] font-light text-body transition-colors hover:text-paper"
+                  className="link-muted text-[15px] font-light"
                 >
                   LinkedIn
+                  <span className="sr-only"> (opens in a new tab)</span>
                 </a>
               </li>
               <li>
                 <a
                   href={`mailto:${CONTACT_ADDRESS}`}
                   onClick={() => posthog.capture("outbound_link_clicked", { destination: "email", location: "footer" })}
-                  className="text-[15px] font-light text-body transition-colors hover:text-paper"
+                  className="link-muted text-[15px] font-light"
                 >
                   {CONTACT_ADDRESS}
                 </a>

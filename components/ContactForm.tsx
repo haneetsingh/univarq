@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, type FocusEvent, type FormEvent } from "react";
+import { useRef, useState, type FocusEvent, type FormEvent } from "react";
 import posthog from "posthog-js";
 import { Field } from "./contact-form/Field";
 import { MessageField } from "./contact-form/MessageField";
 import { ErrorBanner } from "./contact-form/ErrorBanner";
 import { SubmitButton } from "./contact-form/SubmitButton";
-import { Turnstile } from "./contact-form/Turnstile";
+import { Turnstile, turnstileEnabled } from "./contact-form/Turnstile";
 import {
-  referenceId,
   validateField,
+  type ErrorReason,
   type FieldErrors,
   type FieldName,
   type Status,
@@ -24,9 +24,10 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [messageLength, setMessageLength] = useState(0);
-  const [networkError, setNetworkError] = useState(false);
+  const [errorReason, setErrorReason] = useState<ErrorReason>("network");
   const [turnstileToken, setTurnstileToken] = useState("");
   const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const turnstileRef = useRef<HTMLDivElement>(null);
 
   function handleBlur(event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = event.currentTarget;
@@ -45,14 +46,14 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
-    const reference = referenceId();
 
-    // Honeypot: hidden field a real user never fills in.
+    // Honeypot tripped: fake success, send nothing.
     if (formData.get("honeypot")) {
       onSuccess?.({
         name: String(formData.get("name") ?? ""),
         email: String(formData.get("email") ?? ""),
-        reference,
+        reference: "",
+        confirmationSent: true,
       });
       setStatus("success");
       return;
@@ -74,21 +75,21 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
     );
     if (firstInvalid) {
       setStatus("error");
-      setNetworkError(false);
+      setErrorReason("validation");
       form.querySelector<HTMLInputElement | HTMLTextAreaElement>(
         `[name="${firstInvalid}"]`
       )?.focus();
       return;
     }
 
-    if (!turnstileToken) {
+    if (turnstileEnabled && !turnstileToken) {
       setStatus("error");
-      setNetworkError(true);
+      setErrorReason("verification");
+      turnstileRef.current?.focus();
       return;
     }
 
     setStatus("submitting");
-    setNetworkError(false);
 
     const companyName = String(formData.get("companyName") ?? "");
 
@@ -105,14 +106,16 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
           email,
           companyName,
           message,
-          reference,
           turnstileToken,
         }),
       });
 
       if (!response.ok) throw new Error("Submission failed");
 
-      onSuccess?.({ name, email, reference });
+      const result: { reference?: string } = await response.json();
+      const reference = result.reference ?? "";
+
+      onSuccess?.({ name, email, reference, confirmationSent: true });
       setStatus("success");
       form.reset();
       setMessageLength(0);
@@ -123,14 +126,12 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
       });
     } catch (err) {
       setStatus("error");
-      setNetworkError(true);
+      setErrorReason("network");
       // Turnstile tokens are single-use; force a fresh challenge.
       setTurnstileToken("");
       setTurnstileResetKey((k) => k + 1);
       posthog.captureException(err);
-      posthog.capture("contact_form_error", {
-        reference,
-      });
+      posthog.capture("contact_form_error");
     }
   }
 
@@ -151,7 +152,7 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
 
       {status === "error" && (
         <ErrorBanner
-          networkError={networkError}
+          reason={errorReason}
           invalidCount={Object.values(errors).filter(Boolean).length}
         />
       )}
@@ -209,6 +210,7 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
       />
 
       <Turnstile
+        ref={turnstileRef}
         onVerify={setTurnstileToken}
         onExpire={() => setTurnstileToken("")}
         resetKey={turnstileResetKey}

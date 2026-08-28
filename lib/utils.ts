@@ -27,6 +27,14 @@ export function createRateLimiter(max: number, windowMs: number) {
   return function rateLimit(key: string): boolean {
     const now = Date.now();
     const cutoff = now - windowMs;
+
+    // Evict fully-stale keys once the map grows large.
+    if (hitsByKey.size > 5000) {
+      for (const [k, times] of hitsByKey) {
+        if (times.every((t) => t <= cutoff)) hitsByKey.delete(k);
+      }
+    }
+
     const hits = (hitsByKey.get(key) ?? []).filter((t) => t > cutoff);
     if (hits.length >= max) {
       hitsByKey.set(key, hits);

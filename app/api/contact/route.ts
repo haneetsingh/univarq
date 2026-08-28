@@ -16,18 +16,44 @@ import {
 const MESSAGE_MAX = 1200;
 const MAX_BODY_BYTES = 16 * 1024;
 
+// Server-issued correlation code, shown to the sender and logged. Not looked up.
+function makeReference(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let suffix = "";
+  for (let i = 0; i < 5; i++) {
+    suffix += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return `UVQ-${suffix}`;
+}
+
 const rateLimit = createRateLimiter(5, 10 * 60 * 1000);
 
 const TURNSTILE_ACTION = "contact";
 const TURNSTILE_VERIFY_URL =
   "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
+// Best-effort PostHog event for broken/missing server config. Never throws.
+function reportMisconfiguration(
+  problem: string,
+  properties: Record<string, unknown> = {}
+): void {
+  console.error(`Contact form misconfiguration: ${problem}`, properties);
+  try {
+    const posthog = getPostHogClient();
+    posthog.capture({
+      distinctId: `config-${problem}`,
+      event: "contact_misconfigured",
+      properties: { problem, ...properties },
+    });
+    void posthog.flush().catch(() => {});
+  } catch {}
+}
+
 type ContactSubmission = {
   name?: string;
   email?: string;
   companyName?: string;
   message?: string;
-  reference?: string;
   honeypot?: string;
   turnstileToken?: string;
 };
@@ -36,7 +62,13 @@ type ContactSubmission = {
 // configured, so the form still works without it.
 async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET;
-  if (!secret) return true;
+  if (!secret) {
+    // Fail open, but a missing secret in production is a real problem.
+    if (process.env.NODE_ENV === "production") {
+      reportMisconfiguration("turnstile_secret_missing");
+    }
+    return true;
+  }
 
   const expectedHostnames = new Set(
     (process.env.TURNSTILE_HOSTNAMES ?? "")
@@ -45,7 +77,13 @@ async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
       .filter(Boolean)
   );
 
-  if (!token || token.length > 2048 || expectedHostnames.size === 0) {
+  if (expectedHostnames.size === 0) {
+    // Secret set but no hostname allowlist: every submission would be rejected.
+    reportMisconfiguration("turnstile_hostnames_missing");
+    return false;
+  }
+
+  if (!token || token.length > 2048) {
     return false;
   }
 
@@ -60,7 +98,10 @@ async function verifyTurnstile(token: string, ip: string): Promise<boolean> {
     if (!res.ok) throw new Error(`siteverify ${res.status}`);
     result = await res.json();
   } catch (err) {
-    console.error("Turnstile siteverify failed", err);
+    // siteverify unreachable or erroring — a bad secret or an outage, not the user.
+    reportMisconfiguration("turnstile_siteverify_failed", {
+      error: err instanceof Error ? err.message : String(err),
+    });
     return false;
   }
 
@@ -80,7 +121,7 @@ export async function POST(request: Request) {
   }
 
   const raw = await request.text();
-  if (raw.length > MAX_BODY_BYTES) {
+  if (new TextEncoder().encode(raw).length > MAX_BODY_BYTES) {
     return NextResponse.json({ error: "Payload too large" }, { status: 413 });
   }
 
@@ -110,20 +151,20 @@ export async function POST(request: Request) {
   const rawMessage = (data.message ?? "").trim();
   const message =
     rawMessage.length > MESSAGE_MAX ? rawMessage.slice(0, MESSAGE_MAX) : rawMessage;
-  const reference = (data.reference ?? "").trim();
+  const reference = makeReference();
 
   if (!name || !email || !message) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
   if (!isEmailConfigured()) {
-    console.error("RESEND_API_KEY is not set; cannot send contact form emails.");
+    reportMisconfiguration("resend_api_key_missing");
     return NextResponse.json({ error: "Email not configured" }, { status: 500 });
   }
 
   const firstName = firstNameOf(name);
   const escapedMessage = escapeHtml(message);
-  const referenceLine = reference ? `Reference: ${reference}` : "";
+  const referenceLine = `Reference: ${reference}`;
 
   // Internal notification email to the Univarq inbox.
   const notification: EmailPayload = {
@@ -134,10 +175,9 @@ export async function POST(request: Request) {
       `${email}${companyName ? ` · ${companyName}` : ""}`,
       "",
       message,
-      referenceLine ? `\n${referenceLine}` : null,
-    ]
-      .filter((line) => line !== null)
-      .join("\n"),
+      "",
+      referenceLine,
+    ].join("\n"),
   };
 
   // Confirmation copy back to the sender.
@@ -161,32 +201,52 @@ export async function POST(request: Request) {
           }
         </blockquote>
         <p style="margin:0 0 16px">If you have anything to add, just reply to this email.</p>
-        ${referenceLine ? `<p style="margin:0 0 16px;color:#79838F;font-size:13px">${escapeHtml(referenceLine)}</p>` : ""}
+        <p style="margin:0 0 16px;color:#79838F;font-size:13px">${escapeHtml(referenceLine)}</p>
         <p style="margin:0">Univarq</p>
       </div>
     `,
-    text: `Hi ${firstName},\n\nThanks for getting in touch. Your message is with us and a copy is below for your records.\n\n${message}\n\nIf you have anything to add, just reply to this email.\n${referenceLine ? `\n${referenceLine}\n` : ""}\nUnivarq`,
+    text: `Hi ${firstName},\n\nThanks for getting in touch. Your message is with us and a copy is below for your records.\n\n${message}\n\nIf you have anything to add, just reply to this email.\n\n${referenceLine}\n\nUnivarq`,
   };
 
-  try {
-    await Promise.all([sendEmail(notification), sendEmail(confirmation)]);
-  } catch (error) {
-    console.error("Failed to send contact form emails", error);
+  // Only the notification must succeed; a failed confirmation copy is tolerable.
+  const [notified, confirmed] = await Promise.allSettled([
+    sendEmail(notification),
+    sendEmail(confirmation),
+  ]);
+
+  if (notified.status === "rejected") {
+    reportMisconfiguration("resend_send_failed", {
+      error: String(notified.reason),
+      which: "notification",
+    });
     return NextResponse.json({ error: "Failed to send" }, { status: 502 });
   }
 
-  const distinctId = request.headers.get("x-posthog-distinct-id") ?? reference;
-  const posthog = getPostHogClient();
-  posthog.capture({
-    distinctId,
-    event: "contact_received",
-    properties: {
-      has_company: Boolean(companyName),
-      message_length: message.length,
-      reference,
-    },
-  });
-  await posthog.flush();
+  if (confirmed.status === "rejected") {
+    reportMisconfiguration("confirmation_send_failed", {
+      error: String(confirmed.reason),
+    });
+  }
 
-  return NextResponse.json({ ok: true });
+  // Best-effort: the emails are already sent, analytics must not fail the request.
+  try {
+    const posthog = getPostHogClient();
+    posthog.capture({
+      distinctId: request.headers.get("x-posthog-distinct-id") || `anon-${ip}`,
+      event: "contact_received",
+      properties: {
+        has_company: Boolean(companyName),
+        message_length: message.length,
+        reference,
+        confirmation_sent: confirmed.status === "fulfilled",
+        posthog_session_id:
+          request.headers.get("x-posthog-session-id") || undefined,
+      },
+    });
+    await posthog.flush();
+  } catch (error) {
+    console.error("Failed to record contact_received event", error);
+  }
+
+  return NextResponse.json({ ok: true, reference });
 }

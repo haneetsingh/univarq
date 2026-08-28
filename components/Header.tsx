@@ -53,12 +53,23 @@ export function Header() {
       setActiveId(current);
     }
 
+    // One measurement per frame.
+    let frame = 0;
+    function schedule() {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        recompute();
+      });
+    }
+
     recompute();
-    window.addEventListener("scroll", recompute, { passive: true });
-    window.addEventListener("resize", recompute);
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
     return () => {
-      window.removeEventListener("scroll", recompute);
-      window.removeEventListener("resize", recompute);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
 
@@ -89,7 +100,7 @@ export function Header() {
           <a
             href="#home"
             aria-label="Univarq home"
-            className="flex items-center gap-2.5"
+            className="flex items-center gap-2.5 text-paper"
           >
             <Mark size={29} />
             <span className="font-display text-[24px] font-semibold leading-none tracking-[-0.035em] text-paper">
@@ -129,12 +140,8 @@ export function Header() {
                   <a
                     key={link.href}
                     href={link.href}
-                    aria-current={isActive ? "true" : undefined}
-                    className="border-b pb-1.25 font-body text-sm transition-colors"
-                    style={{
-                      color: isActive ? "var(--color-paper)" : "var(--color-grey)",
-                      borderBottomColor: isActive ? "var(--color-brass)" : "transparent",
-                    }}
+                    aria-current={isActive ? "location" : undefined}
+                    className="border-b border-transparent pb-1.25 font-body text-sm text-grey transition-colors hover:text-paper aria-[current]:border-brass aria-[current]:text-paper"
                   >
                     {link.label}
                   </a>

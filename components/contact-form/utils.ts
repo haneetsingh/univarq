@@ -2,6 +2,8 @@ export type FieldName = "name" | "email" | "message";
 export type FieldErrors = Partial<Record<FieldName, string>>;
 export type Status = "idle" | "submitting" | "success" | "error";
 
+export type ErrorReason = "validation" | "verification" | "network";
+
 export const MESSAGE_MAX = 1200;
 
 export function validateField(name: FieldName, value: string): string | undefined {
@@ -20,17 +22,9 @@ export function validateField(name: FieldName, value: string): string | undefine
   return undefined;
 }
 
-export function referenceId() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let suffix = "";
-  for (let i = 0; i < 5; i++) {
-    suffix += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return `UVQ-${suffix}`;
-}
-
 export type SuccessInfo = {
   name: string;
   email: string;
   reference: string;
+  confirmationSent: boolean;
 };

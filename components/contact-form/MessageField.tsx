@@ -39,21 +39,12 @@ export function MessageField({
         aria-describedby={error ? "message-error" : undefined}
         onBlur={onBlur}
         onChange={onMessageChange}
-        className="resize-y px-4 py-3.5 text-[15.5px] text-paper transition-colors disabled:opacity-55"
-        style={{
-          background: error ? "var(--color-error-field-bg)" : "var(--color-ink)",
-          border: `1px solid ${error ? "var(--color-error)" : "var(--color-input-border)"}`,
-          outline: "none",
-          minHeight: 132,
-        }}
-        onFocus={(e) => {
-          const ringColor = error ? "196,84,74" : "47,86,134";
-          e.currentTarget.style.borderColor = error ? "var(--color-error)" : "var(--color-focus)";
-          e.currentTarget.style.boxShadow = `0 0 0 2px rgba(${ringColor},0.35)`;
-        }}
-        onBlurCapture={(e) => {
-          e.currentTarget.style.boxShadow = "none";
-        }}
+        className="min-h-33 resize-y border border-input-border bg-ink px-4 py-3.5 text-[15.5px] text-paper
+          transition-colors outline-none
+          focus:border-focus focus:shadow-[0_0_0_2px_rgba(47,86,134,0.35)]
+          aria-invalid:border-error aria-invalid:bg-error-field-bg
+          aria-invalid:focus:shadow-[0_0_0_2px_rgba(196,84,74,0.35)]
+          disabled:opacity-55"
       />
       {error && <FieldError id="message-error">{error}</FieldError>}
     </div>

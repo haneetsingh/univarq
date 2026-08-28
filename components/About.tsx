@@ -29,14 +29,15 @@ export function About() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => posthog.capture("outbound_link_clicked", { destination: "linkedin", location: "about" })}
-            className="border-b border-b-[rgba(192,138,62,.45)] pb-1 text-brass transition-colors hover:text-brass-hover"
+            className="link-brass"
           >
             {about.linkedinLabel}
+            <span className="sr-only"> (opens in a new tab)</span>
           </a>
           <a
             href={`mailto:${CONTACT_ADDRESS}`}
             onClick={() => posthog.capture("outbound_link_clicked", { destination: "email", location: "about" })}
-            className="border-b border-b-[rgba(192,138,62,.45)] pb-1 text-brass transition-colors hover:text-brass-hover"
+            className="link-brass"
           >
             {CONTACT_ADDRESS}
           </a>

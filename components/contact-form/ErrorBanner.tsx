@@ -1,17 +1,18 @@
 import { ErrorIcon } from "../icons/ErrorIcon";
 import { CONTACT_ADDRESS } from "@/lib/email";
+import type { ErrorReason } from "./utils";
 
 type ErrorBannerProps = {
-  networkError: boolean;
+  reason: ErrorReason;
   invalidCount: number;
 };
 
-function summaryText(invalidCount: number) {
+function validationText(invalidCount: number) {
   if (invalidCount <= 1) return "One field needs attention.";
   return `${invalidCount} fields need attention.`;
 }
 
-export function ErrorBanner({ networkError, invalidCount }: ErrorBannerProps) {
+export function ErrorBanner({ reason, invalidCount }: ErrorBannerProps) {
   return (
     <div
       role="alert"
@@ -25,9 +26,22 @@ export function ErrorBanner({ networkError, invalidCount }: ErrorBannerProps) {
       <div className="flex flex-col gap-1">
         <span className="text-[15px] font-medium text-paper">Nothing was sent.</span>
         <span className="text-[13.5px] leading-snug text-error-summary">
-          {networkError
-            ? `Your message is still here. Try again, or email ${CONTACT_ADDRESS}.`
-            : summaryText(invalidCount)}
+          {reason === "network" ? (
+            <>
+              Your message is still here. Try again or email{" "}
+              <a
+                href={`mailto:${CONTACT_ADDRESS}`}
+                className="text-error-summary underline decoration-error-summary/50 underline-offset-4 transition-colors hover:text-paper hover:decoration-paper"
+              >
+                {CONTACT_ADDRESS}
+              </a>
+              .
+            </>
+          ) : reason === "verification" ? (
+            "Complete the verification check below, then send again."
+          ) : (
+            validationText(invalidCount)
+          )}
         </span>
       </div>
     </div>
