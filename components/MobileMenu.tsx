@@ -76,17 +76,14 @@ export function MobileMenu({ links, open, onClose }: MobileMenuProps) {
           onClick={onClose}
         >
           <Mark size={29} />
-          <span
-            className="font-display font-semibold text-paper"
-            style={{ fontSize: 24, letterSpacing: "-0.035em", lineHeight: 1 }}
-          >
+          <span className="font-display text-[24px] font-semibold leading-none tracking-[-0.035em] text-paper">
             Univarq
           </span>
         </a>
         <Button
           variant="icon"
           onClick={onClose}
-          icon={<span className="font-label" style={{ fontSize: 22 }}>&times;</span>}
+          icon={<span className="font-label text-[22px]">&times;</span>}
         >
           Close menu
         </Button>
@@ -99,8 +96,7 @@ export function MobileMenu({ links, open, onClose }: MobileMenuProps) {
             href={link.href}
             data-menu-link
             onClick={onClose}
-            className="flex items-center border-b border-rule font-display font-medium text-paper transition-colors hover:text-brass"
-            style={{ minHeight: 64, fontSize: 26, letterSpacing: "-0.025em" }}
+            className="flex min-h-16 items-center border-b border-rule font-display text-[26px] font-medium tracking-[-0.025em] text-paper transition-colors hover:text-brass"
           >
             {link.label}
           </a>

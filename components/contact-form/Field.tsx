@@ -34,7 +34,7 @@ export function Field({
   return (
     <div className="flex flex-col gap-2">
       <label htmlFor={id} className="label text-grey">
-        {label} {required && <span style={{ color: "var(--color-brass)" }}>*</span>}
+        {label} {required && <span className="text-brass">*</span>}
         {labelSuffix ? <> {labelSuffix}</> : null}
       </label>
       <input
@@ -74,8 +74,7 @@ export function FieldError({ id, children }: { id: string; children: string }) {
   return (
     <div
       id={id}
-      className="flex items-start gap-2 text-[13.5px] leading-snug"
-      style={{ color: "var(--color-error)" }}
+      className="flex items-start gap-2 text-[13.5px] leading-snug text-error"
     >
       <ErrorIcon small />
       <span>{children}</span>

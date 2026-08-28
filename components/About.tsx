@@ -11,19 +11,13 @@ export function About() {
     <section id="about" className="border-t border-rule px-6 py-14 sm:px-8 sm:py-22">
       <div className="mx-auto max-w-6xl">
         <p className="label mb-4 text-brass">{about.eyebrow}</p>
-        <h2
-          className="max-w-[26ch] font-display font-semibold text-paper"
-          style={{ fontSize: "clamp(28px, 3.8vw, 44px)", lineHeight: 1.1, letterSpacing: "-0.03em" }}
-        >
+        <h2 className="max-w-[26ch] font-display text-[clamp(28px,3.8vw,44px)] font-semibold leading-[1.1] tracking-[-0.03em] text-paper">
           {about.heading}
         </h2>
 
-        <div
-          className="mt-11 grid gap-9"
-          style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))" }}
-        >
+        <div className="mt-11 grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-9">
           {about.paragraphs.map((paragraph) => (
-            <p key={paragraph} className="text-body" style={{ fontSize: 17, fontWeight: 300, lineHeight: 1.75 }}>
+            <p key={paragraph} className="leading-[1.75] text-body">
               {paragraph}
             </p>
           ))}
@@ -35,16 +29,14 @@ export function About() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => posthog.capture("outbound_link_clicked", { destination: "linkedin", location: "about" })}
-            className="border-b pb-1 text-brass transition-colors hover:text-brass-hover"
-            style={{ borderBottomColor: "rgba(192,138,62,.45)" }}
+            className="border-b border-b-[rgba(192,138,62,.45)] pb-1 text-brass transition-colors hover:text-brass-hover"
           >
             {about.linkedinLabel}
           </a>
           <a
             href={`mailto:${CONTACT_ADDRESS}`}
             onClick={() => posthog.capture("outbound_link_clicked", { destination: "email", location: "about" })}
-            className="border-b pb-1 text-brass transition-colors hover:text-brass-hover"
-            style={{ borderBottomColor: "rgba(192,138,62,.45)" }}
+            className="border-b border-b-[rgba(192,138,62,.45)] pb-1 text-brass transition-colors hover:text-brass-hover"
           >
             {CONTACT_ADDRESS}
           </a>

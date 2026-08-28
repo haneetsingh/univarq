@@ -7,26 +7,17 @@ export function WhyUnivarq() {
     <section className="border-t border-rule bg-slate px-6 py-14 sm:px-8 sm:py-22">
       <div className="mx-auto max-w-6xl">
         <p className="label mb-4 text-brass">{whyUnivarq.eyebrow}</p>
-        <h2
-          className="font-display font-semibold text-paper"
-          style={{ fontSize: "clamp(30px, 4.2vw, 46px)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
-        >
+        <h2 className="type-h2 text-paper">
           {whyUnivarq.heading}
         </h2>
 
-        <div
-          className="mt-11 grid gap-9"
-          style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}
-        >
+        <div className="mt-11 grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-9">
           {whyUnivarq.items.map((item) => (
             <div key={item.title} className="border-t-2 border-rule-strong pt-6">
-              <h3
-                className="font-display font-semibold text-paper"
-                style={{ fontSize: 21, lineHeight: 1.3, letterSpacing: "-0.02em" }}
-              >
+              <h3 className="font-display text-[21px] font-semibold leading-[1.3] tracking-[-0.02em] text-paper">
                 {item.title}
               </h3>
-              <p className="mt-3 text-body" style={{ fontSize: "16.5px", fontWeight: 300, lineHeight: 1.7 }}>
+              <p className="type-card-body mt-3 text-body">
                 {item.description}
               </p>
             </div>

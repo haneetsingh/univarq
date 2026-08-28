@@ -9,14 +9,11 @@ export function Technology() {
         <div className="grid items-end gap-6 sm:grid-cols-2">
           <div>
             <p className="label mb-4 text-brass">{technology.eyebrow}</p>
-            <h2
-              className="font-display font-semibold text-paper"
-              style={{ fontSize: "clamp(30px, 4.2vw, 46px)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
-            >
+            <h2 className="type-h2 text-paper">
               {technology.heading}
             </h2>
           </div>
-          <p className="text-grey" style={{ fontSize: 17, fontWeight: 300 }}>
+          <p className="text-grey">
             {technology.subheading}
           </p>
         </div>
@@ -25,21 +22,17 @@ export function Technology() {
           {technology.items.map((item) => (
             <div
               key={item.term}
-              className="grid gap-1.5 border-b border-rule py-5"
-              style={{ gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", columnGap: 40 }}
+              className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-1.5 gap-x-10 border-b border-rule py-5"
             >
               <dt className="font-label text-[11px] uppercase text-grey">{item.term}</dt>
-              <dd className="text-paper" style={{ fontSize: 17, fontWeight: 300 }}>
+              <dd className="text-paper">
                 {item.description}
               </dd>
             </div>
           ))}
         </dl>
 
-        <p
-          className="mt-6 font-display text-paper"
-          style={{ fontSize: 19, fontWeight: 400, letterSpacing: "-0.02em" }}
-        >
+        <p className="mt-6 font-display text-[19px] font-normal tracking-[-0.02em] text-paper">
           {technology.closingLine}
         </p>
       </div>

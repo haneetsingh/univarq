@@ -10,17 +10,11 @@ export function CaseStudies() {
     >
       <div className="mx-auto max-w-6xl">
         <p className="label mb-4 text-brass">{caseStudies.eyebrow}</p>
-        <h2
-          className="font-display font-semibold text-paper"
-          style={{ fontSize: "clamp(30px, 4.2vw, 46px)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
-        >
+        <h2 className="type-h2 text-paper">
           {caseStudies.heading}
         </h2>
 
-        <div
-          className="mt-11 grid gap-7"
-          style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))" }}
-        >
+        <div className="mt-11 grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-7">
           {caseStudies.items.map((study) => (
             <div
               key={study.model}
@@ -29,44 +23,32 @@ export function CaseStudies() {
               <div>
                 <span className="label text-brass">{study.model}</span>
                 <p className="label mt-2.5 text-grey">{study.sector}</p>
-                <h3
-                  className="mt-2 font-display font-semibold text-paper"
-                  style={{ fontSize: "clamp(24px, 2.4vw, 28px)", lineHeight: 1.2, letterSpacing: "-0.025em" }}
-                >
+                <h3 className="mt-2 font-display text-[clamp(24px,2.4vw,28px)] font-semibold leading-[1.2] tracking-[-0.025em] text-paper">
                   {study.title}
                 </h3>
               </div>
               <dl className="flex flex-col gap-4">
                 <div>
-                  <dt
-                    className="font-label text-[11px] uppercase"
-                    style={{ color: "var(--color-blueprint)" }}
-                  >
+                  <dt className="font-label text-[11px] uppercase text-blueprint">
                     Challenge
                   </dt>
-                  <dd className="mt-1.5 text-body" style={{ fontSize: "16.5px", fontWeight: 300, lineHeight: 1.7 }}>
+                  <dd className="type-card-body mt-1.5 text-body">
                     {study.challenge}
                   </dd>
                 </div>
                 <div>
-                  <dt
-                    className="font-label text-[11px] uppercase"
-                    style={{ color: "var(--color-blueprint)" }}
-                  >
+                  <dt className="font-label text-[11px] uppercase text-blueprint">
                     Approach
                   </dt>
-                  <dd className="mt-1.5 text-body" style={{ fontSize: "16.5px", fontWeight: 300, lineHeight: 1.7 }}>
+                  <dd className="type-card-body mt-1.5 text-body">
                     {study.approach}
                   </dd>
                 </div>
                 <div>
-                  <dt
-                    className="font-label text-[11px] uppercase"
-                    style={{ color: "var(--color-blueprint)" }}
-                  >
+                  <dt className="font-label text-[11px] uppercase text-blueprint">
                     Outcome
                   </dt>
-                  <dd className="mt-1.5 text-paper" style={{ fontSize: "16.5px", fontWeight: 300, lineHeight: 1.7 }}>
+                  <dd className="type-card-body mt-1.5 text-paper">
                     {study.outcome}
                   </dd>
                 </div>

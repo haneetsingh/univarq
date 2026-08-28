@@ -95,3 +95,12 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
+
+@layer components {
+  .type-h2 {
+    @apply font-display text-[clamp(30px,4.2vw,46px)] font-semibold leading-[1.08] tracking-[-0.03em];
+  }
+  .type-card-body {
+    @apply text-[16.5px] font-light leading-[1.7];
+  }
+}

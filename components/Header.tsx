@@ -92,10 +92,7 @@ export function Header() {
             className="flex items-center gap-2.5"
           >
             <Mark size={29} />
-            <span
-              className="font-display font-semibold text-paper"
-              style={{ fontSize: 24, letterSpacing: "-0.035em", lineHeight: 1 }}
-            >
+            <span className="font-display text-[24px] font-semibold leading-none tracking-[-0.035em] text-paper">
               Univarq
             </span>
           </a>
