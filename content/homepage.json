@@ -110,26 +110,26 @@
       {
         "model": "BUILD",
         "sector": "Financial Services",
-        "title": "Financing, built end to end",
-        "challenge": "Financing work was spread across disconnected tools and getting harder to grow.",
-        "approach": "One platform end to end, covering the data, the APIs and the screens the team works in every day.",
-        "outcome": "Deals move through in fewer steps, on a platform that can take more of them."
+        "title": "Complex workflows, simplified",
+        "challenge": "Financing work was spread across disconnected tools and getting slower with every deal.",
+        "approach": "We built one platform end to end, covering the data, APIs and screens the team works in every day.",
+        "outcome": "Financing moves through fewer steps, on a platform that can take more deals."
       },
       {
         "model": "EMBED",
-        "sector": "Global Insurance",
+        "sector": "Global Bank",
         "title": "One platform, many teams",
-        "challenge": "A large enterprise platform needed modernizing while several teams needed to ship without waiting on each other.",
-        "approach": "We embedded with their engineering organization and helped their team get there, on micro-frontends over federated GraphQL.",
-        "outcome": "Their teams ship on their own schedule now and ownership sits where it should."
+        "challenge": "A large enterprise platform needed to evolve and teams couldn't ship without waiting on each other.",
+        "approach": "We embedded with their engineering teams on independently deployable front ends over a shared API layer.",
+        "outcome": "Their teams ship on their own schedules and ownership stays with them."
       },
       {
         "model": "MODERNIZE",
         "sector": "Logistics & Supply Chain",
-        "title": "Supply chain, made visible",
-        "challenge": "Operational data sat in pieces, so nobody could see where the risk was.",
-        "approach": "Rebuilt it as one platform, with the APIs and visualization to make the data readable.",
-        "outcome": "Risk and dependencies are visible and decisions get made on what the data shows."
+        "title": "From data to operational insight",
+        "challenge": "Operational data sat in pieces, so risk was hard to see.",
+        "approach": "We rebuilt the data layer as one platform, with dashboards and an interactive map over the top.",
+        "outcome": "They see risk and dependencies earlier and decisions follow the data."
       }
     ]
   },
