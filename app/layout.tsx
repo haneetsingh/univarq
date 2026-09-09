@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://univarq.io"),
   title: "Univarq — Software engineering partner | Build, embed, modernize",
   description:
-    "Univarq takes ownership of complex technology initiatives. We come in as a build partner, an embedded team or a modernization partner, whichever the problem calls for.",
+    "An engineering partner that takes ownership of complex technology initiatives. Build, embed or modernize.",
   alternates: {
     canonical: "/",
   },
